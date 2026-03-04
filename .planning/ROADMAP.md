@@ -30,7 +30,10 @@
 5. User can delete a goal from the system
 6. All data persists across browser refreshes in localStorage
 
-**Plans:** TBD
+**Plans:** 
+- [ ] 01-01-PLAN.md — Project Foundation (Vite + React + TypeScript + Tailwind + shadcn/ui)
+- [ ] 01-02-PLAN.md — State Management (Zustand + localStorage persistence)
+- [ ] 01-03-PLAN.md — Goal CRUD UI (Forms, Cards, List)
 
 ---
 
@@ -77,7 +80,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Goals | 0/1 | Not started | - |
+| 1. Foundation & Goals | 0/3 | Ready to execute | - |
 | 2. Tasks & Progress | 0/1 | Not started | - |
 | 3. Reflection | 0/1 | Not started | - |
 
