@@ -84,17 +84,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GOAL-03 | Phase 1 | Pending |
 | GOAL-04 | Phase 1 | Pending |
 | GOAL-05 | Phase 1 | Pending |
-| TASK-01 | Phase 1 | Pending |
-| TASK-02 | Phase 1 | Pending |
-| TASK-03 | Phase 1 | Pending |
-| TASK-04 | Phase 1 | Pending |
-| PROG-01 | Phase 1 | Pending |
+| TASK-01 | Phase 2 | Pending |
+| TASK-02 | Phase 2 | Pending |
+| TASK-03 | Phase 2 | Pending |
+| TASK-04 | Phase 2 | Pending |
+| PROG-01 | Phase 2 | Pending |
 | TODAY-01 | Phase 2 | Pending |
 | TODAY-02 | Phase 2 | Pending |
-| JOURN-01 | Phase 2 | Pending |
-| JOURN-02 | Phase 2 | Pending |
-| REV-01 | Phase 2 | Pending |
-| REV-02 | Phase 2 | Pending |
+| JOURN-01 | Phase 3 | Pending |
+| JOURN-02 | Phase 3 | Pending |
+| REV-01 | Phase 3 | Pending |
+| REV-02 | Phase 3 | Pending |
 | DATA-01 | Phase 1 | Pending |
 
 **Coverage:**
@@ -104,4 +104,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-04 after initial definition*
+*Last updated: 2026-03-04 - Roadmap created*
