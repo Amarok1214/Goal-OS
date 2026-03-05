@@ -9,11 +9,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Goals
 
-- [ ] **GOAL-01**: User can create a goal with title, description, and deadline
-- [ ] **GOAL-02**: User can set goal status (Active, Paused, Completed, Someday)
-- [ ] **GOAL-03**: User can view a list of all goals with their status
-- [ ] **GOAL-04**: User can edit goal title, description, deadline, and status
-- [ ] **GOAL-05**: User can delete a goal
+- [x] **GOAL-01**: User can create a goal with title, description, and deadline
+- [x] **GOAL-02**: User can set goal status (Active, Paused, Completed, Someday)
+- [x] **GOAL-03**: User can view a list of all goals with their status
+- [x] **GOAL-04**: User can edit goal title, description, deadline, and status
+- [x] **GOAL-05**: User can delete a goal
 
 ### Tasks
 
@@ -43,7 +43,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Data Persistence
 
-- [ ] **DATA-01**: All data persists in localStorage across browser refreshes
+- [x] **DATA-01**: All data persists in localStorage across browser refreshes
 
 ## v2 Requirements
 
@@ -79,11 +79,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GOAL-01 | Phase 1 | Pending |
-| GOAL-02 | Phase 1 | Pending |
-| GOAL-03 | Phase 1 | Pending |
-| GOAL-04 | Phase 1 | Pending |
-| GOAL-05 | Phase 1 | Pending |
+| GOAL-01 | Phase 1 | Complete |
+| GOAL-02 | Phase 1 | Complete |
+| GOAL-03 | Phase 1 | Complete |
+| GOAL-04 | Phase 1 | Complete |
+| GOAL-05 | Phase 1 | Complete |
 | TASK-01 | Phase 2 | Pending |
 | TASK-02 | Phase 2 | Pending |
 | TASK-03 | Phase 2 | Pending |
@@ -95,7 +95,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | JOURN-02 | Phase 3 | Pending |
 | REV-01 | Phase 3 | Pending |
 | REV-02 | Phase 3 | Pending |
-| DATA-01 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total
