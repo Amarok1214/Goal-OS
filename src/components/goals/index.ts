@@ -1,5 +1,3 @@
-// Goal-related components will go here
-// - GoalList.tsx
-// - GoalCard.tsx
-// - GoalForm.tsx
-// - GoalDialog.tsx
+export { GoalForm } from './GoalForm'
+export { GoalCard } from './GoalCard'
+export { GoalList } from './GoalList'
