@@ -1,11 +1,17 @@
 export type GoalStatus = 'active' | 'paused' | 'completed' | 'someday'
 
+export interface GoalLink {
+  label: string
+  url: string
+}
+
 export interface Goal {
   id: string
   title: string
   description: string
   deadline: Date | null
   status: GoalStatus
+  links?: GoalLink[]
   createdAt: Date
   updatedAt: Date
 }

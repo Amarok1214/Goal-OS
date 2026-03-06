@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Button } from './components/ui/button'
 import { GoalList, GoalForm, TodayView } from './components/goals'
+import { CommandPalette } from './components/CommandPalette'
 
 type View = 'goals' | 'today'
 
 function App() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [currentView, setCurrentView] = useState<View>('goals')
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false)
 
   return (
     <div className="app min-h-screen p-8">
@@ -41,6 +43,14 @@ function App() {
               </Button>
             </nav>
             
+            {/* Cmd+K hint */}
+            <button
+              onClick={() => setIsPaletteOpen(true)}
+              className="text-xs px-2 py-1 rounded bg-white/30 text-sky-600 hover:bg-white/50 transition-colors"
+            >
+              ⌘K
+            </button>
+            
             {currentView === 'goals' && (
               <Button 
                 onClick={() => setIsFormOpen(true)}
@@ -61,6 +71,18 @@ function App() {
           onOpenChange={setIsFormOpen}
         />
       )}
+
+      {/* Command Palette */}
+      <CommandPalette
+        open={isPaletteOpen}
+        setOpen={setIsPaletteOpen}
+        onNavigateToGoals={() => setCurrentView('goals')}
+        onNavigateToToday={() => setCurrentView('today')}
+        onOpenGoalForm={() => {
+          setCurrentView('goals')
+          setIsFormOpen(true)
+        }}
+      />
     </div>
   )
 }

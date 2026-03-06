@@ -1,17 +1,23 @@
 import { useState } from 'react'
-import { Check, Pencil, Trash2, Calendar } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Check, Pencil, Trash2, Calendar, Play, Pause } from 'lucide-react'
 import { Button } from '../ui/button'
 import { useTaskStore } from '../../store/taskStore'
+import { useFocusStore } from '../../store/focusStore'
 import type { Task } from '../../types'
 
 interface TaskItemProps {
   task: Task
   onEdit: (task: Task) => void
+  dimmed?: boolean
 }
 
-export function TaskItem({ task, onEdit }: TaskItemProps) {
+export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
   const { toggleTask, deleteTask } = useTaskStore()
+  const { activeTaskId, setActiveTask, clearFocus } = useFocusStore()
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+
+  const isActive = activeTaskId === task.id
 
   const formatDueDate = (date: Date | null): string => {
     if (!date) return ''
@@ -37,9 +43,34 @@ export function TaskItem({ task, onEdit }: TaskItemProps) {
     setIsDeleteOpen(false)
   }
 
+  const handleFocus = () => {
+    if (isActive) {
+      clearFocus()
+    } else {
+      setActiveTask(task.id)
+    }
+  }
+
   return (
     <>
-      <div className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-white/30 transition-colors group">
+      <motion.div 
+        className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors group ${dimmed ? 'opacity-40' : 'hover:bg-white/30'}`}
+        animate={{ opacity: dimmed ? 0.4 : 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Focus Button */}
+        <button
+          onClick={handleFocus}
+          className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
+            isActive
+              ? 'bg-amber-500 text-white'
+              : 'bg-white/50 text-sky-600 hover:bg-amber-100'
+          }`}
+          title={isActive ? 'Stop Focus' : 'Start Focus'}
+        >
+          {isActive ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 ml-0.5" />}
+        </button>
+
         {/* Checkbox */}
         <button
           onClick={handleToggle}
@@ -92,7 +123,7 @@ export function TaskItem({ task, onEdit }: TaskItemProps) {
             <Trash2 className="w-3 h-3" />
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Delete Confirmation */}
       {isDeleteOpen && (

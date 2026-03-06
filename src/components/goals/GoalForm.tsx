@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog'
@@ -8,7 +8,13 @@ import { Textarea } from '../ui/textarea'
 import { Select } from '../ui/select'
 import { Button } from '../ui/button'
 import { useGoalStore } from '../../store/goalStore'
-import type { Goal, GoalStatus } from '../../types'
+import type { Goal, GoalStatus, GoalLink } from '../../types'
+import { Plus, X, Link2 } from 'lucide-react'
+
+const linkSchema = z.object({
+  label: z.string().min(1, 'Label is required'),
+  url: z.string().url('Must be a valid URL'),
+})
 
 const goalSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title must be 100 characters or less'),
@@ -18,6 +24,7 @@ const goalSchema = z.object({
     { message: 'Invalid date format' }
   ),
   status: z.enum(['active', 'paused', 'completed', 'someday']),
+  links: z.array(linkSchema).optional(),
 })
 
 type GoalFormData = z.infer<typeof goalSchema>
@@ -36,6 +43,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
     handleSubmit,
     reset,
     setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<GoalFormData>({
     resolver: zodResolver(goalSchema),
@@ -44,7 +52,13 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
       description: '',
       deadline: '',
       status: 'active',
+      links: [],
     },
+  })
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'links',
   })
 
   // Reset form when modal opens or editGoal changes
@@ -55,12 +69,14 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
         setValue('description', editGoal.description || '')
         setValue('deadline', editGoal.deadline ? new Date(editGoal.deadline).toISOString().split('T')[0] : '')
         setValue('status', editGoal.status)
+        setValue('links', editGoal.links || [])
       } else {
         reset({
           title: '',
           description: '',
           deadline: '',
           status: 'active',
+          links: [],
         })
       }
     }
@@ -72,6 +88,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
       description: data.description || '',
       deadline: data.deadline ? new Date(data.deadline) : null,
       status: data.status as GoalStatus,
+      links: data.links as GoalLink[] | undefined,
     }
 
     if (editGoal) {
@@ -86,7 +103,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="dialog-content" onClose={() => onOpenChange(false)}>
+      <DialogContent className="dialog-content max-h-[80vh] overflow-y-auto" onClose={() => onOpenChange(false)}>
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold font-display" style={{ color: '#0c4a6e' }}>
             {editGoal ? 'Edit Goal' : 'Create New Goal'}
@@ -159,6 +176,53 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
               <option value="completed">Completed</option>
               <option value="someday">Someday</option>
             </Select>
+          </div>
+
+          {/* Links Section */}
+          <div>
+            <label className="text-sm font-medium flex items-center gap-2" style={{ color: '#0c4a6e' }}>
+              <Link2 className="w-4 h-4" />
+              Links
+            </label>
+            
+            <div className="space-y-2 mt-2">
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex gap-2 items-start">
+                  <Input
+                    placeholder="Label (e.g., GitHub)"
+                    {...register(`links.${index}.label` as const)}
+                    className="glass-input flex-1"
+                  />
+                  <Input
+                    placeholder="URL (e.g., https://github.com/...)"
+                    {...register(`links.${index}.url` as const)}
+                    className="glass-input flex-[2]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="p-2 rounded hover:bg-red-100 text-red-500"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+              
+              {errors.links && (
+                <p className="text-sm" style={{ color: '#dc2626' }}>
+                  {errors.links.message || 'Invalid link format'}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => append({ label: '', url: '' })}
+              className="mt-2 flex items-center gap-1 text-sm text-sky-600 hover:text-sky-800"
+            >
+              <Plus className="w-4 h-4" />
+              Add Link
+            </button>
           </div>
 
           <div className="flex justify-end gap-3 pt-4">

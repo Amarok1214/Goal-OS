@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../ui/card'
 import { Button } from '../ui/button'
 import { GoalForm } from './GoalForm'
@@ -7,7 +8,7 @@ import { TaskItem } from './TaskItem'
 import { useGoalStore } from '../../store/goalStore'
 import { useTaskStore } from '../../store/taskStore'
 import type { Goal, GoalStatus, Task } from '../../types'
-import { Pencil, Trash2, Calendar, Plus, CheckSquare } from 'lucide-react'
+import { Pencil, Trash2, Calendar, Plus, CheckSquare, ExternalLink } from 'lucide-react'
 
 interface GoalCardProps {
   goal: Goal
@@ -18,6 +19,32 @@ const statusLabels: Record<GoalStatus, string> = {
   paused: 'Paused',
   completed: 'Completed',
   someday: 'Someday',
+}
+
+// Status-based styling
+const getStatusStyles = (status: GoalStatus) => {
+  switch (status) {
+    case 'active':
+      return {
+        cardClass: 'shadow-[0_0_20px_rgba(14,165,233,0.3)]',
+        borderClass: 'border-sky-300/50',
+      }
+    case 'completed':
+      return {
+        cardClass: '',
+        borderClass: 'border-emerald-300/50',
+      }
+    case 'someday':
+      return {
+        cardClass: 'opacity-80',
+        borderClass: 'border-slate-300/30',
+      }
+    default: // paused
+      return {
+        cardClass: '',
+        borderClass: 'border-amber-300/50',
+      }
+  }
 }
 
 export function GoalCard({ goal }: GoalCardProps) {
@@ -31,6 +58,8 @@ export function GoalCard({ goal }: GoalCardProps) {
   const tasks = getTasksByGoal(goal.id)
   const completedCount = tasks.filter(t => t.completed).length
   const progress = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0
+
+  const statusStyles = getStatusStyles(goal.status)
 
   const formatDeadline = (date: Date | null): string => {
     if (!date) return 'No deadline'
@@ -55,7 +84,7 @@ export function GoalCard({ goal }: GoalCardProps) {
 
   return (
     <>
-      <Card className="glass flex flex-col min-h-[200px]">
+      <Card className={`glass flex flex-col min-h-[200px] ${statusStyles.cardClass} ${statusStyles.borderClass} border-2 transition-all duration-300`}>
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <CardTitle className="text-lg font-semibold pr-4" style={{ color: '#0c4a6e' }}>
@@ -77,7 +106,7 @@ export function GoalCard({ goal }: GoalCardProps) {
             {formatDeadline(goal.deadline)}
           </div>
 
-          {/* Progress Bar */}
+          {/* Framer Motion Progress Bar */}
           {tasks.length > 0 && (
             <div className="mb-3">
               <div className="flex justify-between text-xs mb-1" style={{ color: '#0369a1' }}>
@@ -88,10 +117,24 @@ export function GoalCard({ goal }: GoalCardProps) {
                 <span>{progress}%</span>
               </div>
               <div className="h-2 bg-sky-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-emerald-500 transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
+                <motion.div
+                  className={`h-full rounded-full ${progress === 100 ? 'bg-emerald-500' : 'bg-emerald-500'}`}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                >
+                  <AnimatePresence>
+                    {progress === 100 && (
+                      <motion.div
+                        className="h-full bg-emerald-500 rounded-full"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      />
+                    )}
+                  </AnimatePresence>
+                </motion.div>
               </div>
             </div>
           )}
@@ -108,6 +151,24 @@ export function GoalCard({ goal }: GoalCardProps) {
             </div>
           )}
         </CardContent>
+
+        {/* Links */}
+        {goal.links && goal.links.length > 0 && (
+          <div className="px-4 pb-2 flex flex-wrap gap-2">
+            {goal.links.map((link, idx) => (
+              <a
+                key={idx}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-white/30 text-sky-700 hover:bg-white/50 transition-colors"
+              >
+                <ExternalLink className="w-3 h-3" />
+                {link.label}
+              </a>
+            ))}
+          </div>
+        )}
 
         <CardFooter className="flex justify-between gap-2 pt-0 mt-auto">
           <Button

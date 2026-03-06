@@ -1,22 +1,46 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useTaskStore } from '../../store/taskStore'
 import { useGoalStore } from '../../store/goalStore'
+import { useFocusStore } from '../../store/focusStore'
 import { TaskItem } from './TaskItem'
 import { TaskForm } from './TaskForm'
-import { Calendar, Target, CheckSquare } from 'lucide-react'
+import { Calendar, Target, CheckSquare, Play, X } from 'lucide-react'
 import type { Task } from '../../types'
 
 type FilterType = 'all' | 'due-today' | 'active'
 
+function formatTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds % 60
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+}
+
 export function TodayView() {
   const { tasks, getTodayTasks } = useTaskStore()
   const { goals } = useGoalStore()
+  const { activeTaskId, startTime, clearFocus } = useFocusStore()
   const [filter, setFilter] = useState<FilterType>('all')
   const [isTaskFormOpen, setIsTaskFormOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
+  const [elapsedTime, setElapsedTime] = useState(0)
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
+
+  // Timer effect
+  useEffect(() => {
+    if (!activeTaskId || !startTime) {
+      setElapsedTime(0)
+      return
+    }
+
+    const interval = setInterval(() => {
+      setElapsedTime(Math.floor((Date.now() - startTime) / 1000))
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [activeTaskId, startTime])
 
   const getFilteredTasks = () => {
     const todayTasks = getTodayTasks()
@@ -50,6 +74,8 @@ export function TodayView() {
     setIsTaskFormOpen(true)
   }
 
+  const activeTask = activeTaskId ? tasks.find(t => t.id === activeTaskId) : null
+
   return (
     <div>
       {/* Header */}
@@ -61,6 +87,46 @@ export function TodayView() {
           Manage your tasks for today and keep track of active work
         </p>
       </div>
+
+      {/* Focus Mode Timer */}
+      <AnimatePresence>
+        {activeTask && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-6 glass rounded-xl p-4 border-2 border-amber-400/50"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center animate-pulse">
+                  <Play className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs text-amber-600 font-medium">FOCUSING ON</p>
+                  <p className="text-lg font-semibold" style={{ color: '#0c4a6e' }}>
+                    {activeTask.title}
+                  </p>
+                  <p className="text-xs" style={{ color: '#0369a1' }}>
+                    {getGoalTitle(activeTask.goalId)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-3xl font-mono font-bold text-amber-600">
+                  {formatTime(elapsedTime)}
+                </div>
+                <button
+                  onClick={clearFocus}
+                  className="p-2 rounded-lg hover:bg-amber-100 transition-colors"
+                >
+                  <X className="w-5 h-5 text-amber-600" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Filter Tabs */}
       <div className="flex gap-2 mb-6">
@@ -132,14 +198,22 @@ export function TodayView() {
       ) : (
         <div className="space-y-2">
           {filteredTasks.map((task) => (
-            <div key={task.id} className="glass rounded-lg p-3">
+            <motion.div
+              key={task.id}
+              layout
+              className="glass rounded-lg p-3"
+            >
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs px-2 py-0.5 rounded-full bg-sky-100 text-sky-700">
                   {getGoalTitle(task.goalId)}
                 </span>
               </div>
-              <TaskItem task={task} onEdit={handleEditTask} />
-            </div>
+              <TaskItem 
+                task={task} 
+                onEdit={handleEditTask} 
+                dimmed={!!activeTaskId && activeTaskId !== task.id}
+              />
+            </motion.div>
           ))}
         </div>
       )}
