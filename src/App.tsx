@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { Button } from './components/ui/button'
-import { GoalList, GoalForm, TodayView } from './components/goals'
+import { GoalList, GoalForm } from './components/goals'
+import { TodayView } from './components/today/TodayView'
 import { CommandPalette } from './components/CommandPalette'
-
-type View = 'goals' | 'today'
 
 function App() {
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [currentView, setCurrentView] = useState<View>('goals')
+  const [view, setView] = useState<'today' | 'all'>('today')
   const [isPaletteOpen, setIsPaletteOpen] = useState(false)
 
   return (
@@ -24,24 +23,24 @@ function App() {
             <p style={{ color: '#0284c7' }}>Your goal-focused productivity workspace</p>
           </div>
           
-          {/* Navigation */}
-          <div className="flex items-center gap-4">
-            <nav className="flex gap-2">
-              <Button
-                variant={currentView === 'goals' ? 'default' : 'outline'}
-                onClick={() => setCurrentView('goals')}
-                className={currentView === 'goals' ? 'btn-primary' : 'btn-outline'}
-              >
-                Goals
-              </Button>
-              <Button
-                variant={currentView === 'today' ? 'default' : 'outline'}
-                onClick={() => setCurrentView('today')}
-                className={currentView === 'today' ? 'btn-primary' : 'btn-outline'}
+          {/* View toggle and Add Goal */}
+          <div className="flex items-center gap-3">
+            <div className="glass-sm flex p-1 gap-1">
+              <button
+                onClick={() => setView('today')}
+                className={view === 'today' ? 'btn-primary' : 'btn-ghost'}
+                style={{ padding: '6px 16px', fontSize: '13px', borderRadius: '10px' }}
               >
                 Today
-              </Button>
-            </nav>
+              </button>
+              <button
+                onClick={() => setView('all')}
+                className={view === 'all' ? 'btn-primary' : 'btn-ghost'}
+                style={{ padding: '6px 16px', fontSize: '13px', borderRadius: '10px' }}
+              >
+                All Goals
+              </button>
+            </div>
             
             {/* Cmd+K hint */}
             <button
@@ -51,21 +50,16 @@ function App() {
               ⌘K
             </button>
             
-            {currentView === 'goals' && (
-              <Button 
-                onClick={() => setIsFormOpen(true)}
-                className="btn-primary"
-              >
-                Add Goal
-              </Button>
-            )}
+            <Button onClick={() => setIsFormOpen(true)} className="btn-primary">
+              Add Goal
+            </Button>
           </div>
         </div>
       </header>
       
-      {currentView === 'goals' ? <GoalList /> : <TodayView />}
+      {view === 'today' ? <TodayView /> : <GoalList />}
 
-      {currentView === 'goals' && isFormOpen && (
+      {isFormOpen && (
         <GoalForm
           open={isFormOpen}
           onOpenChange={setIsFormOpen}
@@ -76,10 +70,9 @@ function App() {
       <CommandPalette
         open={isPaletteOpen}
         setOpen={setIsPaletteOpen}
-        onNavigateToGoals={() => setCurrentView('goals')}
-        onNavigateToToday={() => setCurrentView('today')}
+        onNavigateToGoals={() => setView('all')}
+        onNavigateToToday={() => setView('today')}
         onOpenGoalForm={() => {
-          setCurrentView('goals')
           setIsFormOpen(true)
         }}
       />

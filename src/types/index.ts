@@ -12,6 +12,7 @@ export interface Goal {
   deadline: Date | null
   status: GoalStatus
   links?: GoalLink[]
+  subtasks?: SubTask[]
   createdAt: Date
   updatedAt: Date
 }

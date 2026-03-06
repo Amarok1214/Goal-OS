@@ -12,6 +12,7 @@ import { Pencil, Trash2, Calendar, Plus, CheckSquare, ExternalLink } from 'lucid
 
 interface GoalCardProps {
   goal: Goal
+  highlight?: 'overdue' | 'soon'
 }
 
 const statusLabels: Record<GoalStatus, string> = {
@@ -47,7 +48,7 @@ const getStatusStyles = (status: GoalStatus) => {
   }
 }
 
-export function GoalCard({ goal }: GoalCardProps) {
+export function GoalCard({ goal, highlight }: GoalCardProps) {
   const { deleteGoal } = useGoalStore()
   const { getTasksByGoal } = useTaskStore()
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -84,7 +85,21 @@ export function GoalCard({ goal }: GoalCardProps) {
 
   return (
     <>
-      <Card className={`glass flex flex-col min-h-[200px] ${statusStyles.cardClass} ${statusStyles.borderClass} border-2 transition-all duration-300`}>
+      <Card 
+        className={`glass flex flex-col min-h-[200px] ${statusStyles.cardClass} ${statusStyles.borderClass} border-2 transition-all duration-300`}
+        style={{
+          borderColor: highlight === 'overdue'
+            ? 'rgba(248,113,113,0.5)'
+            : highlight === 'soon'
+            ? 'rgba(251,191,36,0.5)'
+            : undefined,
+          boxShadow: highlight === 'overdue'
+            ? '0 0 0 1px rgba(248,113,113,0.3)'
+            : highlight === 'soon'
+            ? '0 0 0 1px rgba(251,191,36,0.3)'
+            : undefined,
+        }}
+      >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <CardTitle className="text-lg font-semibold pr-4" style={{ color: '#0c4a6e' }}>
