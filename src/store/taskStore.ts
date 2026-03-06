@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { persist } from 'zustand/middleware'
 import type { Task, TaskStore } from '../types'
 
 export const useTaskStore = create<TaskStore>()(
@@ -7,67 +7,44 @@ export const useTaskStore = create<TaskStore>()(
     (set, get) => ({
       tasks: [],
 
-      addTask: (goalId, taskData) => {
-        const id = crypto.randomUUID()
-        const now = new Date()
-        const newTask: Task = {
-          ...taskData,
-          id,
-          goalId,
-          createdAt: now,
-          updatedAt: now,
-        }
-        set((state) => ({ tasks: [...state.tasks, newTask] }))
-        return id
-      },
+      addTask: (goalId, title) => set((state) => ({
+        tasks: [
+          ...state.tasks,
+          {
+            id: crypto.randomUUID(),
+            goalId,
+            title: title.trim(),
+            dueDate: null,
+            completed: false,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            subtasks: [],
+          },
+        ],
+      })),
 
-      updateTask: (id, updates) => {
-        set((state) => ({
-          tasks: state.tasks.map((task) =>
-            task.id === id
-              ? { ...task, ...updates, updatedAt: new Date() }
-              : task
-          ),
-        }))
-      },
+      updateTask: (id, updates) => set((state) => ({
+        tasks: state.tasks.map((t) =>
+          t.id === id ? { ...t, ...updates, updatedAt: new Date() } : t
+        ),
+      })),
 
-      deleteTask: (id) => {
-        set((state) => ({
-          tasks: state.tasks.filter((task) => task.id !== id),
-        }))
-      },
+      deleteTask: (id) => set((state) => ({
+        tasks: state.tasks.filter((t) => t.id !== id),
+      })),
 
-      toggleTask: (id) => {
-        set((state) => ({
-          tasks: state.tasks.map((task) =>
-            task.id === id
-              ? { ...task, completed: !task.completed, updatedAt: new Date() }
-              : task
-          ),
-        }))
-      },
+      toggleTask: (id) => set((state) => ({
+        tasks: state.tasks.map((t) =>
+          t.id === id ? { ...t, completed: !t.completed, updatedAt: new Date() } : t
+        ),
+      })),
 
       getTasksByGoal: (goalId) => {
-        return get().tasks.filter((task) => task.goalId === goalId)
+        return get().tasks.filter((t) => t.goalId === goalId)
       },
 
       getTodayTasks: () => {
-        const today = new Date()
-        today.setHours(0, 0, 0, 0)
-        const tomorrow = new Date(today)
-        tomorrow.setDate(tomorrow.getDate() + 1)
-
-        return get().tasks.filter((task) => {
-          if (!task.completed) return true // Active tasks
-          
-          // Tasks due today
-          if (task.dueDate) {
-            const dueDate = new Date(task.dueDate)
-            dueDate.setHours(0, 0, 0, 0)
-            return dueDate.getTime() === today.getTime()
-          }
-          return false
-        })
+        return get().tasks.filter((t) => !t.completed)
       },
 
       addSubtask: (taskId, title) => set((state) => ({
@@ -79,8 +56,10 @@ export const useTaskStore = create<TaskStore>()(
                   ...(t.subtasks || []),
                   {
                     id: crypto.randomUUID(),
-                    title,
+                    taskId,
+                    title: title.trim(),
                     completed: false,
+                    createdAt: new Date(),
                   },
                 ],
               }
@@ -94,7 +73,9 @@ export const useTaskStore = create<TaskStore>()(
             ? {
                 ...t,
                 subtasks: (t.subtasks || []).map((s) =>
-                  s.id === subtaskId ? { ...s, completed: !s.completed } : s
+                  s.id === subtaskId
+                    ? { ...s, completed: !s.completed }
+                    : s
                 ),
               }
             : t
@@ -106,15 +87,14 @@ export const useTaskStore = create<TaskStore>()(
           t.id === taskId
             ? {
                 ...t,
-                subtasks: (t.subtasks || []).filter((s) => s.id !== subtaskId),
+                subtasks: (t.subtasks || []).filter(
+                  (s) => s.id !== subtaskId
+                ),
               }
             : t
         ),
       })),
     }),
-    {
-      name: 'goal-os-tasks',
-      storage: createJSONStorage(() => localStorage),
-    }
+    { name: 'goal-os-tasks' }
   )
 )

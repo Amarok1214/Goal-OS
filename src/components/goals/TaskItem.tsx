@@ -16,7 +16,7 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
   const { toggleTask, deleteTask, addSubtask, toggleSubtask, deleteSubtask } = useTaskStore()
   const { activeTaskId, setActiveTask, clearFocus } = useFocusStore()
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const [showSubtasks, setShowSubtasks] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [subtaskInput, setSubtaskInput] = useState('')
 
   const isActive = activeTaskId === task.id
@@ -71,6 +71,7 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
       >
         {/* Focus Button */}
         <button
+          type="button"
           onClick={handleFocus}
           className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
             isActive
@@ -84,6 +85,7 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
 
         {/* Checkbox */}
         <button
+          type="button"
           onClick={handleToggle}
           className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
             task.completed
@@ -103,10 +105,11 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
           {task.title}
         </span>
 
-        {/* Subtask count badge */}
+        {/* Subtask count badge - expand/collapse toggle */}
         {subtasks.length > 0 && (
           <button
-            onClick={() => setShowSubtasks(!showSubtasks)}
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
             className={`text-xs px-2 py-0.5 rounded-full ${
               completedSubtasks === subtasks.length
                 ? 'bg-emerald-100 text-emerald-700'
@@ -151,7 +154,7 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
       </motion.div>
 
       {/* Subtasks - nested under task */}
-      {showSubtasks && (
+      {isExpanded && (
         <div className="ml-11 mt-1 space-y-1">
           {subtasks.map((subtask) => (
             <div
@@ -159,6 +162,7 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
               className="flex items-center gap-2 group glass-sm px-3 py-1.5"
             >
               <button
+                type="button"
                 onClick={() => toggleSubtask(task.id, subtask.id)}
                 className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0 transition-all"
                 style={{
@@ -182,6 +186,7 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
                 {subtask.title}
               </span>
               <button
+                type="button"
                 onClick={() => deleteSubtask(task.id, subtask.id)}
                 className="opacity-0 group-hover:opacity-100 transition-opacity"
                 style={{ color: '#f87171' }}
@@ -194,13 +199,20 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
           {/* Add subtask input */}
           <div className="flex gap-2 mt-2">
             <input
+              type="text"
               className="glass-input text-xs py-1.5 px-3 flex-1"
-              placeholder="Add sub-task..."
+              placeholder="Add a sub-task..."
               value={subtaskInput}
               onChange={(e) => setSubtaskInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAddSubtask()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  handleAddSubtask()
+                }
+              }}
             />
             <button
+              type="button"
               onClick={handleAddSubtask}
               className="btn-primary px-3 py-1.5 text-xs"
               style={{ borderRadius: '10px' }}

@@ -58,16 +58,14 @@ export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps
   }, [open, editTask, setValue, reset])
 
   const onSubmit = (data: TaskFormData) => {
-    const taskData = {
-      title: data.title,
-      dueDate: data.dueDate ? new Date(data.dueDate) : null,
-      completed: editTask?.completed || false,
-    }
-
     if (editTask) {
-      updateTask(editTask.id, taskData)
+      updateTask(editTask.id, {
+        title: data.title,
+        dueDate: data.dueDate ? new Date(data.dueDate) : null,
+        completed: editTask.completed,
+      })
     } else {
-      addTask(goalId, taskData)
+      addTask(goalId, data.title)
     }
 
     onOpenChange(false)
