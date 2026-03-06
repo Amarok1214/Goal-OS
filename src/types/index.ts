@@ -5,14 +5,6 @@ export interface GoalLink {
   url: string
 }
 
-export type SubTask = {
-  id: string
-  goalId: string
-  title: string
-  completed: boolean
-  createdAt: Date
-}
-
 export interface Goal {
   id: string
   title: string
@@ -20,7 +12,6 @@ export interface Goal {
   deadline: Date | null
   status: GoalStatus
   links?: GoalLink[]
-  subtasks?: SubTask[]
   createdAt: Date
   updatedAt: Date
 }
@@ -31,9 +22,6 @@ export interface GoalStore {
   updateGoal: (id: string, updates: Partial<Omit<Goal, 'id' | 'createdAt'>>) => void
   deleteGoal: (id: string) => void
   getGoalById: (id: string) => Goal | undefined
-  addSubtask: (goalId: string, title: string) => void
-  toggleSubtask: (goalId: string, subtaskId: string) => void
-  deleteSubtask: (goalId: string, subtaskId: string) => void
 }
 
 export interface Task {
@@ -42,6 +30,7 @@ export interface Task {
   title: string
   dueDate: Date | null
   completed: boolean
+  subtasks?: { id: string; title: string; completed: boolean }[]
   createdAt: Date
   updatedAt: Date
 }
@@ -54,4 +43,7 @@ export interface TaskStore {
   toggleTask: (id: string) => void
   getTasksByGoal: (goalId: string) => Task[]
   getTodayTasks: () => Task[]
+  addSubtask: (taskId: string, title: string) => void
+  toggleSubtask: (taskId: string, subtaskId: string) => void
+  deleteSubtask: (taskId: string, subtaskId: string) => void
 }

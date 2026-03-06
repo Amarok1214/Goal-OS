@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Check, Pencil, Trash2, Calendar, Play, Pause } from 'lucide-react'
+import { Check, Pencil, Trash2, Calendar, Play, Pause, Plus, Trash2 as TrashSub } from 'lucide-react'
 import { Button } from '../ui/button'
 import { useTaskStore } from '../../store/taskStore'
 import { useFocusStore } from '../../store/focusStore'
@@ -13,11 +13,15 @@ interface TaskItemProps {
 }
 
 export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
-  const { toggleTask, deleteTask } = useTaskStore()
+  const { toggleTask, deleteTask, addSubtask, toggleSubtask, deleteSubtask } = useTaskStore()
   const { activeTaskId, setActiveTask, clearFocus } = useFocusStore()
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [showSubtasks, setShowSubtasks] = useState(false)
+  const [subtaskInput, setSubtaskInput] = useState('')
 
   const isActive = activeTaskId === task.id
+  const subtasks = task.subtasks || []
+  const completedSubtasks = subtasks.filter(s => s.completed).length
 
   const formatDueDate = (date: Date | null): string => {
     if (!date) return ''
@@ -48,6 +52,13 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
       clearFocus()
     } else {
       setActiveTask(task.id)
+    }
+  }
+
+  const handleAddSubtask = () => {
+    if (subtaskInput.trim()) {
+      addSubtask(task.id, subtaskInput.trim())
+      setSubtaskInput('')
     }
   }
 
@@ -92,6 +103,20 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
           {task.title}
         </span>
 
+        {/* Subtask count badge */}
+        {subtasks.length > 0 && (
+          <button
+            onClick={() => setShowSubtasks(!showSubtasks)}
+            className={`text-xs px-2 py-0.5 rounded-full ${
+              completedSubtasks === subtasks.length
+                ? 'bg-emerald-100 text-emerald-700'
+                : 'bg-sky-100 text-sky-700'
+            }`}
+          >
+            {completedSubtasks}/{subtasks.length}
+          </button>
+        )}
+
         {/* Due Date */}
         {task.dueDate && (
           <span
@@ -124,6 +149,67 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
           </Button>
         </div>
       </motion.div>
+
+      {/* Subtasks - nested under task */}
+      {showSubtasks && (
+        <div className="ml-11 mt-1 space-y-1">
+          {subtasks.map((subtask) => (
+            <div
+              key={subtask.id}
+              className="flex items-center gap-2 group glass-sm px-3 py-1.5"
+            >
+              <button
+                onClick={() => toggleSubtask(task.id, subtask.id)}
+                className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0 transition-all"
+                style={{
+                  background: subtask.completed
+                    ? 'linear-gradient(135deg, #38bdf8, #0ea5e9)'
+                    : 'rgba(186,230,253,0.4)',
+                  border: '1.5px solid rgba(125,211,252,0.6)',
+                }}
+              >
+                {subtask.completed && (
+                  <Check className="w-2.5 h-2.5" style={{ color: '#fff' }} />
+                )}
+              </button>
+              <span
+                className="text-xs flex-1"
+                style={{
+                  color: subtask.completed ? '#7dd3fc' : '#0369a1',
+                  textDecoration: subtask.completed ? 'line-through' : 'none',
+                }}
+              >
+                {subtask.title}
+              </span>
+              <button
+                onClick={() => deleteSubtask(task.id, subtask.id)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ color: '#f87171' }}
+              >
+                <TrashSub className="w-3 h-3" />
+              </button>
+            </div>
+          ))}
+          
+          {/* Add subtask input */}
+          <div className="flex gap-2 mt-2">
+            <input
+              className="glass-input text-xs py-1.5 px-3 flex-1"
+              placeholder="Add sub-task..."
+              value={subtaskInput}
+              onChange={(e) => setSubtaskInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddSubtask()}
+            />
+            <button
+              onClick={handleAddSubtask}
+              className="btn-primary px-3 py-1.5 text-xs"
+              style={{ borderRadius: '10px' }}
+            >
+              <Plus className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirmation */}
       {isDeleteOpen && (

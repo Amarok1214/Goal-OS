@@ -69,6 +69,48 @@ export const useTaskStore = create<TaskStore>()(
           return false
         })
       },
+
+      addSubtask: (taskId, title) => set((state) => ({
+        tasks: state.tasks.map((t) =>
+          t.id === taskId
+            ? {
+                ...t,
+                subtasks: [
+                  ...(t.subtasks || []),
+                  {
+                    id: crypto.randomUUID(),
+                    title,
+                    completed: false,
+                  },
+                ],
+              }
+            : t
+        ),
+      })),
+
+      toggleSubtask: (taskId, subtaskId) => set((state) => ({
+        tasks: state.tasks.map((t) =>
+          t.id === taskId
+            ? {
+                ...t,
+                subtasks: (t.subtasks || []).map((s) =>
+                  s.id === subtaskId ? { ...s, completed: !s.completed } : s
+                ),
+              }
+            : t
+        ),
+      })),
+
+      deleteSubtask: (taskId, subtaskId) => set((state) => ({
+        tasks: state.tasks.map((t) =>
+          t.id === taskId
+            ? {
+                ...t,
+                subtasks: (t.subtasks || []).filter((s) => s.id !== subtaskId),
+              }
+            : t
+        ),
+      })),
     }),
     {
       name: 'goal-os-tasks',
