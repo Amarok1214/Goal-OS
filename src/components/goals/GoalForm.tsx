@@ -86,10 +86,12 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="dialog-content" onClose={() => onOpenChange(false)}>
         <DialogHeader>
-          <DialogTitle>{editGoal ? 'Edit Goal' : 'Create New Goal'}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-xl font-semibold font-display" style={{ color: '#0c4a6e' }}>
+            {editGoal ? 'Edit Goal' : 'Create New Goal'}
+          </DialogTitle>
+          <DialogDescription style={{ color: '#0369a1' }}>
             {editGoal
               ? 'Update your goal details below.'
               : 'Add a new goal to your productivity workspace.'}
@@ -98,22 +100,22 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="title" className="text-sm font-medium">
-              Title <span className="text-destructive">*</span>
+            <label htmlFor="title" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
+              Title <span style={{ color: '#dc2626' }}>*</span>
             </label>
             <Input
               id="title"
               placeholder="Enter goal title"
               {...register('title')}
-              className={errors.title ? 'border-destructive' : ''}
+              className={`glass-input mt-1 ${errors.title ? 'border-red-400' : ''}`}
             />
             {errors.title && (
-              <p className="text-sm text-destructive mt-1">{errors.title.message}</p>
+              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>{errors.title.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="description" className="text-sm font-medium">
+            <label htmlFor="description" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
               Description
             </label>
             <Textarea
@@ -121,35 +123,36 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
               placeholder="Describe your goal (optional)"
               rows={3}
               {...register('description')}
-              className={errors.description ? 'border-destructive' : ''}
+              className={`glass-input mt-1 ${errors.description ? 'border-red-400' : ''}`}
             />
             {errors.description && (
-              <p className="text-sm text-destructive mt-1">{errors.description.message}</p>
+              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>{errors.description.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="deadline" className="text-sm font-medium">
+            <label htmlFor="deadline" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
               Deadline
             </label>
             <Input
               id="deadline"
               type="date"
               {...register('deadline')}
-              className={errors.deadline ? 'border-destructive' : ''}
+              className={`glass-input mt-1 ${errors.deadline ? 'border-red-400' : ''}`}
             />
             {errors.deadline && (
-              <p className="text-sm text-destructive mt-1">{errors.deadline.message}</p>
+              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>{errors.deadline.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="status" className="text-sm font-medium">
+            <label htmlFor="status" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
               Status
             </label>
             <Select
               id="status"
               {...register('status')}
+              className="glass-input mt-1"
             >
               <option value="active">Active</option>
               <option value="paused">Paused</option>
@@ -163,10 +166,11 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              className="btn-outline"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="btn-primary">
               {isSubmitting ? 'Saving...' : editGoal ? 'Save Changes' : 'Create Goal'}
             </Button>
           </div>

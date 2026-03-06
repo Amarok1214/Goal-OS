@@ -1,3 +1,6 @@
 export { GoalForm } from './GoalForm'
 export { GoalCard } from './GoalCard'
 export { GoalList } from './GoalList'
+export { TaskForm } from './TaskForm'
+export { TaskItem } from './TaskItem'
+export { TodayView } from './TodayView'

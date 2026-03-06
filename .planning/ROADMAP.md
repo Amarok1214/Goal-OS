@@ -34,6 +34,9 @@
 - [x] 01-01-PLAN.md — Project Foundation (Vite + React + TypeScript + Tailwind + shadcn/ui)
 - [x] 01-02-PLAN.md — State Management (Zustand + localStorage persistence)
 - [x] 01-03-PLAN.md — Goal CRUD UI (Forms, Cards, List)
+- [ ] 02-01-PLAN.md — Task Types & Store
+- [ ] 02-02-PLAN.md — Task UI Components
+- [ ] 02-03-PLAN.md — Progress Tracking & Today View
 
 ---
 
@@ -81,7 +84,7 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Goals | 3/3 | Complete | 2026-03-05 |
-| 2. Tasks & Progress | 0/1 | Not started | - |
+| 2. Tasks & Progress | 0/3 | In Progress | - |
 | 3. Reflection | 0/1 | Not started | - |
 
 ---

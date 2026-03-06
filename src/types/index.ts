@@ -17,3 +17,23 @@ export interface GoalStore {
   deleteGoal: (id: string) => void
   getGoalById: (id: string) => Goal | undefined
 }
+
+export interface Task {
+  id: string
+  goalId: string
+  title: string
+  dueDate: Date | null
+  completed: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface TaskStore {
+  tasks: Task[]
+  addTask: (goalId: string, task: Omit<Task, 'id' | 'goalId' | 'createdAt' | 'updatedAt'>) => string
+  updateTask: (id: string, updates: Partial<Omit<Task, 'id' | 'goalId'>>) => void
+  deleteTask: (id: string) => void
+  toggleTask: (id: string) => void
+  getTasksByGoal: (goalId: string) => Task[]
+  getTodayTasks: () => Task[]
+}
