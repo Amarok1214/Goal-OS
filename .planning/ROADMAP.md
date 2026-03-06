@@ -7,7 +7,7 @@
 ## Phases
 
 - [x] **Phase 1: Foundation & Goals** - Project setup, state management, localStorage, Goal CRUD
-- [ ] **Phase 2: Tasks & Progress** - Task management, progress tracking, Today view
+- [x] **Phase 2: Tasks & Progress** - Task management, progress tracking, Today view
 - [ ] **Phase 3: Reflection** - Journaling, weekly review
 
 ---
@@ -34,9 +34,9 @@
 - [x] 01-01-PLAN.md — Project Foundation (Vite + React + TypeScript + Tailwind + shadcn/ui)
 - [x] 01-02-PLAN.md — State Management (Zustand + localStorage persistence)
 - [x] 01-03-PLAN.md — Goal CRUD UI (Forms, Cards, List)
-- [ ] 02-01-PLAN.md — Task Types & Store
-- [ ] 02-02-PLAN.md — Task UI Components
-- [ ] 02-03-PLAN.md — Progress Tracking & Today View
+- [x] 02-01-PLAN.md — Task Types & Store
+- [x] 02-02-PLAN.md — Task UI Components
+- [x] 02-03-PLAN.md — Progress Tracking & Today View
 
 ---
 
@@ -84,7 +84,7 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Goals | 3/3 | Complete | 2026-03-05 |
-| 2. Tasks & Progress | 0/3 | In Progress | - |
+| 2. Tasks & Progress | 3/3 | Complete | 2026-03-06 |
 | 3. Reflection | 0/1 | Not started | - |
 
 ---
@@ -98,13 +98,13 @@
 | GOAL-03 | Phase 1 | Complete |
 | GOAL-04 | Phase 1 | Complete |
 | GOAL-05 | Phase 1 | Complete |
-| TASK-01 | Phase 2 | Pending |
-| TASK-02 | Phase 2 | Pending |
-| TASK-03 | Phase 2 | Pending |
-| TASK-04 | Phase 2 | Pending |
-| PROG-01 | Phase 2 | Pending |
-| TODAY-01 | Phase 2 | Pending |
-| TODAY-02 | Phase 2 | Pending |
+| TASK-01 | Phase 2 | Complete |
+| TASK-02 | Phase 2 | Complete |
+| TASK-03 | Phase 2 | Complete |
+| TASK-04 | Phase 2 | Complete |
+| PROG-01 | Phase 2 | Complete |
+| TODAY-01 | Phase 2 | Complete |
+| TODAY-02 | Phase 2 | Complete |
 | JOURN-01 | Phase 3 | Pending |
 | JOURN-02 | Phase 3 | Pending |
 | REV-01 | Phase 3 | Pending |
