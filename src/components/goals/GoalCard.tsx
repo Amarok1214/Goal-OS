@@ -86,7 +86,7 @@ export function GoalCard({ goal, highlight }: GoalCardProps) {
   return (
     <>
       <Card 
-        className={`glass flex flex-col min-h-[200px] ${statusStyles.cardClass} ${statusStyles.borderClass} border-2 transition-all duration-300`}
+        className={`glass flex flex-col ${statusStyles.cardClass} ${statusStyles.borderClass} border-2 transition-all duration-300`}
         style={{
           borderColor: highlight === 'overdue'
             ? 'rgba(248,113,113,0.5)'
@@ -156,13 +156,10 @@ export function GoalCard({ goal, highlight }: GoalCardProps) {
 
           {/* Tasks List */}
           {tasks.length > 0 && (
-            <div className="space-y-1 mt-3 pt-3 border-t border-sky-200/50">
-              {tasks.slice(0, 3).map((task) => (
+            <div className="space-y-2 mt-2">
+              {tasks.map((task) => (
                 <TaskItem key={task.id} task={task} onEdit={handleEditTask} />
               ))}
-              {tasks.length > 3 && (
-                <p className="text-xs text-sky-500 pl-3">+{tasks.length - 3} more tasks</p>
-              )}
             </div>
           )}
         </CardContent>
