@@ -39,6 +39,50 @@ export const useGoalStore = create<GoalStore>()(
       getGoalById: (id) => {
         return get().goals.find((goal) => goal.id === id)
       },
+
+      addSubtask: (goalId, title) => set((state) => ({
+        goals: state.goals.map((g) =>
+          g.id === goalId
+            ? {
+                ...g,
+                subtasks: [
+                  ...(g.subtasks || []),
+                  {
+                    id: crypto.randomUUID(),
+                    goalId,
+                    title,
+                    completed: false,
+                    createdAt: new Date(),
+                  },
+                ],
+              }
+            : g
+        ),
+      })),
+
+      toggleSubtask: (goalId, subtaskId) => set((state) => ({
+        goals: state.goals.map((g) =>
+          g.id === goalId
+            ? {
+                ...g,
+                subtasks: (g.subtasks || []).map((s) =>
+                  s.id === subtaskId ? { ...s, completed: !s.completed } : s
+                ),
+              }
+            : g
+        ),
+      })),
+
+      deleteSubtask: (goalId, subtaskId) => set((state) => ({
+        goals: state.goals.map((g) =>
+          g.id === goalId
+            ? {
+                ...g,
+                subtasks: (g.subtasks || []).filter((s) => s.id !== subtaskId),
+              }
+            : g
+        ),
+      })),
     }),
     {
       name: 'goal-os-storage',

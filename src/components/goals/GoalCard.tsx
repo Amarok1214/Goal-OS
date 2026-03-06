@@ -5,6 +5,7 @@ import { Button } from '../ui/button'
 import { GoalForm } from './GoalForm'
 import { TaskForm } from './TaskForm'
 import { TaskItem } from './TaskItem'
+import { SubtaskList } from './SubtaskList'
 import { useGoalStore } from '../../store/goalStore'
 import { useTaskStore } from '../../store/taskStore'
 import type { Goal, GoalStatus, Task } from '../../types'
@@ -105,6 +106,9 @@ export function GoalCard({ goal }: GoalCardProps) {
             <Calendar className="w-4 h-4 mr-1.5" />
             {formatDeadline(goal.deadline)}
           </div>
+
+          {/* Subtasks */}
+          <SubtaskList goal={goal} />
 
           {/* Framer Motion Progress Bar */}
           {tasks.length > 0 && (
