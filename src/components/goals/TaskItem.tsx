@@ -106,7 +106,7 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
         </span>
 
         {/* Subtask count badge - expand/collapse toggle */}
-        {subtasks.length > 0 && (
+        {subtasks.length > 0 ? (
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
@@ -117,6 +117,15 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
             }`}
           >
             {completedSubtasks}/{subtasks.length}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsExpanded(true)}
+            className="text-xs px-2 py-0.5 rounded-full bg-sky-50 text-sky-500 hover:bg-sky-100"
+            title="Add subtask"
+          >
+            + Subtask
           </button>
         )}
 
