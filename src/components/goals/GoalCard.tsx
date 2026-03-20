@@ -90,6 +90,12 @@ export function GoalCard({ goal }: GoalCardProps) {
   const goalTasks = getTasksByGoal(goal.id)
   const status = statusConfig[goal.status]
 
+  // Helper function - must be defined before useMemo
+  const hasActiveSubtasks = (task: Task): boolean => {
+    return (task.subtasks?.some(s => s.completed) ?? false) && 
+           (task.subtasks?.some(s => !s.completed) ?? false)
+  }
+
   // Group tasks
   const { inProgressTasks, remainingTasks, completedTasks } = useMemo(() => {
     const inProgress = goalTasks.filter(t => !t.completed && hasActiveSubtasks(t))
@@ -97,11 +103,6 @@ export function GoalCard({ goal }: GoalCardProps) {
     const completed = goalTasks.filter(t => t.completed)
     return { inProgressTasks: inProgress, remainingTasks: remaining, completedTasks: completed }
   }, [goalTasks])
-
-  const hasActiveSubtasks = (task: Task): boolean => {
-    return (task.subtasks?.some(s => s.completed) ?? false) && 
-           (task.subtasks?.some(s => !s.completed) ?? false)
-  }
 
   // Progress calculation
   const totalItems = goalTasks.reduce((acc, task) => acc + 1 + (task.subtasks?.length || 0), 0)
