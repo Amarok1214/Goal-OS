@@ -120,7 +120,7 @@ export function TodayView() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3
             items-start">
             {overdue.map((goal) => (
-              <GoalCard key={goal.id} goal={goal} highlight="overdue" />
+              <GoalCard key={goal.id} goal={goal} />
             ))}
           </div>
         </div>
@@ -139,7 +139,7 @@ export function TodayView() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3
             items-start">
             {dueSoon.map((goal) => (
-              <GoalCard key={goal.id} goal={goal} highlight="soon" />
+              <GoalCard key={goal.id} goal={goal} />
             ))}
           </div>
         </div>
