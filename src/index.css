@@ -2,6 +2,32 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────
+   TAILWIND V4 THEME CONFIGURATION
+   ───────────────────────────────────────────────────────── */
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--accent-primary);
+  --color-primary-foreground: white;
+  --color-secondary: var(--bg-tertiary);
+  --color-secondary-foreground: var(--foreground);
+  --color-accent: var(--text-accent);
+  --color-accent-foreground: white;
+  --color-destructive: var(--accent-danger);
+  --color-destructive-foreground: white;
+  --color-success: var(--status-active);
+  --color-warning: var(--accent-warning);
+}
+
+/* ─────────────────────────────────────────────────────────
    DARK THEME DESIGN SYSTEM
    ───────────────────────────────────────────────────────── */
 
@@ -10,6 +36,17 @@
   --bg-primary: #0f1e2e;
   --bg-secondary: #1a2f45;
   --bg-tertiary: #243a52;
+  
+  /* Tailwind v3 shadcn/ui compatibility colors */
+  --background: #0f1e2e;
+  --foreground: #f0f4f8;
+  --muted: #1a2f45;
+  --muted-foreground: #8da0b3;
+  --card: #1a2f45;
+  --card-foreground: #f0f4f8;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #38bdf8;
   
   /* Surface colors - solid for better visibility */
   --surface-glass: rgba(20, 35, 55, 0.92);
