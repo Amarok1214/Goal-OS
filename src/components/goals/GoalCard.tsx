@@ -28,7 +28,6 @@ import {
 
 interface GoalCardProps {
   goal: Goal
-  highlight?: 'overdue' | 'soon'
 }
 
 const statusConfig: Record<GoalStatus, { label: string; bg: string; text: string; border: string }> = {
@@ -73,7 +72,7 @@ const TASK_GROUPS: TaskGroupConfig[] = [
   { key: 'completed', label: 'Completed', icon: <CheckCircle2 className="w-3.5 h-3.5" />, defaultExpanded: false },
 ]
 
-export function GoalCard({ goal, highlight }: GoalCardProps) {
+export function GoalCard({ goal }: GoalCardProps) {
   const { deleteGoal } = useGoalStore()
   const { getTasksByGoal } = useTaskStore()
   const { activeTaskId, stopPomodoro } = useFocusStore()
@@ -87,13 +86,6 @@ export function GoalCard({ goal, highlight }: GoalCardProps) {
     remaining: true,
     completed: false,
   })
-
-  // Highlight background colors
-  const highlightBg = highlight === 'overdue' 
-    ? 'rgba(239, 68, 68, 0.08)' 
-    : highlight === 'soon' 
-    ? 'rgba(251, 191, 36, 0.08)' 
-    : undefined
 
   const goalTasks = getTasksByGoal(goal.id)
   const status = statusConfig[goal.status]
@@ -312,7 +304,7 @@ export function GoalCard({ goal, highlight }: GoalCardProps) {
         className="glass flex flex-col transition-all duration-300 overflow-hidden"
         style={{
           borderLeft: `4px solid ${status.border}`,
-          background: highlightBg || 'rgba(255, 255, 255, 0.05)',
+          background: 'rgba(20, 35, 55, 0.92)',
         }}
       >
         {/* Card Header */}

@@ -167,13 +167,16 @@ export function TodayView() {
       {/* All clear state */}
       {overdue.length === 0 && dueSoon.length === 0 &&
         active.length === 0 && (
-          <div className="glass p-12 text-center">
+          <div 
+            className="glass p-12 text-center"
+            style={{ background: 'rgba(20, 35, 55, 0.95)', border: '1px solid rgba(255,255,255,0.15)' }}
+          >
             <div className="text-4xl mb-4">🎉</div>
             <h3 className="font-display font-bold text-xl mb-2"
-              style={{ color: 'var(--text-primary)' }}>
+              style={{ color: '#f0f4f8' }}>
               All caught up!
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+            <p style={{ color: '#8da0b3', fontSize: '14px' }}>
               No urgent goals today. Add a new goal to keep moving forward.
             </p>
           </div>
