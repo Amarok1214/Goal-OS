@@ -607,4 +607,5 @@ h1, h2, h3, h4, h5, h6 {
   padding: 40px 36px;
   overflow-y: auto;
   min-height: 100vh;
+  background: transparent; /* Allow body gradient to show through */
 }
