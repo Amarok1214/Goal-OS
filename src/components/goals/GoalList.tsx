@@ -9,10 +9,10 @@ export function GoalList() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <div className="glass w-20 h-20 rounded-full flex items-center justify-center mb-6">
-          <Target className="w-10 h-10" style={{ color: '#0ea5e9' }} />
+          <Target className="w-10 h-10" style={{ color: 'var(--text-accent)' }} />
         </div>
-        <h3 className="text-xl font-semibold mb-2 font-display" style={{ color: '#0c4a6e' }}>No goals yet</h3>
-        <p className="mb-6 max-w-sm" style={{ color: '#0284c7' }}>
+        <h3 className="text-xl font-semibold mb-2 font-display" style={{ color: 'var(--text-primary)' }}>No goals yet</h3>
+        <p className="mb-6 max-w-sm" style={{ color: 'var(--text-secondary)' }}>
           Click "Add Goal" in the header to create your first goal.
         </p>
       </div>

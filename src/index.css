@@ -11,10 +11,10 @@
   --bg-secondary: #1a2f45;
   --bg-tertiary: #243a52;
   
-  /* Surface colors */
-  --surface-glass: rgba(255, 255, 255, 0.05);
-  --surface-glass-hover: rgba(255, 255, 255, 0.08);
-  --surface-glass-strong: rgba(255, 255, 255, 0.07);
+  /* Surface colors - increased opacity for better visibility */
+  --surface-glass: rgba(30, 50, 70, 0.7);
+  --surface-glass-hover: rgba(40, 60, 85, 0.8);
+  --surface-glass-strong: rgba(25, 45, 65, 0.85);
   
   /* Border colors */
   --border-subtle: rgba(255, 255, 255, 0.1);

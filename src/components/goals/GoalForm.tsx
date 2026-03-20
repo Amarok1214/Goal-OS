@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -8,8 +8,9 @@ import { Textarea } from '../ui/textarea'
 import { Select } from '../ui/select'
 import { Button } from '../ui/button'
 import { useGoalStore } from '../../store/goalStore'
-import type { Goal, GoalStatus, GoalLink } from '../../types'
-import { Plus, X, Link2 } from 'lucide-react'
+import type { Goal, GoalStatus, GoalLink, GoalCategory } from '../../types'
+import { CATEGORY_LABELS } from '../../types'
+import { Plus, X, Link2, Tag } from 'lucide-react'
 
 const linkSchema = z.object({
   label: z.string().min(1, 'Label is required'),
@@ -24,6 +25,7 @@ const goalSchema = z.object({
     { message: 'Invalid date format' }
   ),
   status: z.enum(['active', 'paused', 'completed', 'someday']),
+  category: z.enum(['work', 'health', 'learning', 'finance', 'creative', 'social', 'other']).optional(),
   links: z.array(linkSchema).optional(),
 })
 
@@ -52,6 +54,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
       description: '',
       deadline: '',
       status: 'active',
+      category: undefined,
       links: [],
     },
   })
@@ -69,6 +72,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
         setValue('description', editGoal.description || '')
         setValue('deadline', editGoal.deadline ? new Date(editGoal.deadline).toISOString().split('T')[0] : '')
         setValue('status', editGoal.status)
+        setValue('category', editGoal.category)
         setValue('links', editGoal.links || [])
       } else {
         reset({
@@ -76,6 +80,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
           description: '',
           deadline: '',
           status: 'active',
+          category: undefined,
           links: [],
         })
       }
@@ -88,6 +93,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
       description: data.description || '',
       deadline: data.deadline ? new Date(data.deadline) : null,
       status: data.status as GoalStatus,
+      category: data.category as GoalCategory | undefined,
       links: data.links as GoalLink[] | undefined,
     }
 
@@ -105,10 +111,10 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="dialog-content max-h-[80vh] overflow-y-auto" onClose={() => onOpenChange(false)}>
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold font-display" style={{ color: '#0c4a6e' }}>
+          <DialogTitle className="text-xl font-semibold font-display" style={{ color: 'var(--text-primary)' }}>
             {editGoal ? 'Edit Goal' : 'Create New Goal'}
           </DialogTitle>
-          <DialogDescription style={{ color: '#0369a1' }}>
+          <DialogDescription style={{ color: 'var(--text-secondary)' }}>
             {editGoal
               ? 'Update your goal details below.'
               : 'Add a new goal to your productivity workspace.'}
@@ -117,8 +123,8 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="title" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
-              Title <span style={{ color: '#dc2626' }}>*</span>
+            <label htmlFor="title" className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+              Title <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <Input
               id="title"
@@ -127,12 +133,12 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
               className={`glass-input mt-1 ${errors.title ? 'border-red-400' : ''}`}
             />
             {errors.title && (
-              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>{errors.title.message}</p>
+              <p className="text-sm mt-1" style={{ color: '#ef4444' }}>{errors.title.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="description" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
+            <label htmlFor="description" className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
               Description
             </label>
             <Textarea
@@ -143,12 +149,12 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
               className={`glass-input mt-1 ${errors.description ? 'border-red-400' : ''}`}
             />
             {errors.description && (
-              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>{errors.description.message}</p>
+              <p className="text-sm mt-1" style={{ color: '#ef4444' }}>{errors.description.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="deadline" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
+            <label htmlFor="deadline" className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
               Deadline
             </label>
             <Input
@@ -158,18 +164,19 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
               className={`glass-input mt-1 ${errors.deadline ? 'border-red-400' : ''}`}
             />
             {errors.deadline && (
-              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>{errors.deadline.message}</p>
+              <p className="text-sm mt-1" style={{ color: '#ef4444' }}>{errors.deadline.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="status" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
+            <label htmlFor="status" className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
               Status
             </label>
             <Select
               id="status"
               {...register('status')}
               className="glass-input mt-1"
+              style={{ background: 'var(--surface-glass)', color: 'var(--text-primary)' }}
             >
               <option value="active">Active</option>
               <option value="paused">Paused</option>
@@ -178,9 +185,31 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
             </Select>
           </div>
 
+          <div>
+            <label htmlFor="category" className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--text-secondary)' }}>
+              <Tag className="w-4 h-4" />
+              Category
+            </label>
+            <Select
+              id="category"
+              {...register('category')}
+              className="glass-input mt-1"
+              style={{ background: 'var(--surface-glass)', color: 'var(--text-primary)' }}
+            >
+              <option value="">No category</option>
+              <option value="work">{CATEGORY_LABELS.work}</option>
+              <option value="health">{CATEGORY_LABELS.health}</option>
+              <option value="learning">{CATEGORY_LABELS.learning}</option>
+              <option value="finance">{CATEGORY_LABELS.finance}</option>
+              <option value="creative">{CATEGORY_LABELS.creative}</option>
+              <option value="social">{CATEGORY_LABELS.social}</option>
+              <option value="other">{CATEGORY_LABELS.other}</option>
+            </Select>
+          </div>
+
           {/* Links Section */}
           <div>
-            <label className="text-sm font-medium flex items-center gap-2" style={{ color: '#0c4a6e' }}>
+            <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
               <Link2 className="w-4 h-4" />
               Links
             </label>
@@ -201,7 +230,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="p-2 rounded hover:bg-red-100 text-red-500"
+                    className="p-2 rounded hover:bg-red-500/20 text-red-400"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -209,7 +238,7 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
               ))}
               
               {errors.links && (
-                <p className="text-sm" style={{ color: '#dc2626' }}>
+                <p className="text-sm" style={{ color: '#ef4444' }}>
                   {errors.links.message || 'Invalid link format'}
                 </p>
               )}
@@ -218,7 +247,8 @@ export function GoalForm({ open, onOpenChange, editGoal }: GoalFormProps) {
             <button
               type="button"
               onClick={() => append({ label: '', url: '' })}
-              className="mt-2 flex items-center gap-1 text-sm text-sky-600 hover:text-sky-800"
+              className="mt-2 flex items-center gap-1 text-sm"
+              style={{ color: 'var(--text-accent)' }}
             >
               <Plus className="w-4 h-4" />
               Add Link

@@ -76,10 +76,10 @@ export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="dialog-content" onClose={() => onOpenChange(false)}>
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold font-display" style={{ color: '#0c4a6e' }}>
+          <DialogTitle className="text-xl font-semibold font-display" style={{ color: 'var(--text-primary)' }}>
             {editTask ? 'Edit Task' : 'Add New Task'}
           </DialogTitle>
-          <DialogDescription style={{ color: '#0369a1' }}>
+          <DialogDescription style={{ color: 'var(--text-secondary)' }}>
             {editTask
               ? 'Update your task details below.'
               : 'Add a new task to this goal.'}
@@ -88,8 +88,8 @@ export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="title" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
-              Title <span style={{ color: '#dc2626' }}>*</span>
+            <label htmlFor="title" className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+              Title <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <Input
               id="title"
@@ -98,12 +98,12 @@ export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps
               className={`glass-input mt-1 ${errors.title ? 'border-red-400' : ''}`}
             />
             {errors.title && (
-              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>{errors.title.message}</p>
+              <p className="text-sm mt-1" style={{ color: '#ef4444' }}>{errors.title.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="dueDate" className="text-sm font-medium" style={{ color: '#0c4a6e' }}>
+            <label htmlFor="dueDate" className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
               Due Date
             </label>
             <Input
@@ -113,7 +113,7 @@ export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps
               className="glass-input mt-1"
             />
             {errors.dueDate && (
-              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>{errors.dueDate.message}</p>
+              <p className="text-sm mt-1" style={{ color: '#ef4444' }}>{errors.dueDate.message}</p>
             )}
           </div>
 

@@ -10,14 +10,17 @@ interface TaskItemProps {
   task: Task
   onEdit: (task: Task) => void
   dimmed?: boolean
+  goalId?: string
 }
 
-export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
+export function TaskItem({ task, onEdit, dimmed = false, goalId }: TaskItemProps) {
   const { toggleTask, deleteTask, addSubtask, toggleSubtask, deleteSubtask } = useTaskStore()
-  const { activeTaskId, setActiveTask, clearFocus } = useFocusStore()
+  const { activeTaskId, stopPomodoro } = useFocusStore()
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [subtaskInput, setSubtaskInput] = useState('')
+  const [showIntentionModal, setShowIntentionModal] = useState(false)
+  const [intention, setIntention] = useState('')
 
   const isActive = activeTaskId === task.id
   const subtasks = task.subtasks || []
@@ -47,12 +50,21 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
     setIsDeleteOpen(false)
   }
 
+  const { startPomodoro } = useFocusStore()
+  
   const handleFocus = () => {
     if (isActive) {
-      clearFocus()
+      stopPomodoro()
     } else {
-      setActiveTask(task.id)
+      // Show intention modal before starting
+      setShowIntentionModal(true)
     }
+  }
+
+  const handleStartWithIntention = () => {
+    startPomodoro(task.id, goalId || '', task.title, intention)
+    setShowIntentionModal(false)
+    setIntention('')
   }
 
   const handleAddSubtask = () => {
@@ -65,19 +77,20 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
   return (
     <>
       <motion.div 
-        className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors group ${dimmed ? 'opacity-40' : 'hover:bg-white/30'}`}
+        className={`flex items-center gap-3 py-2 px-3 rounded-lg transition-colors group ${dimmed ? 'opacity-40' : ''}`}
         animate={{ opacity: dimmed ? 0.4 : 1 }}
         transition={{ duration: 0.3 }}
+        style={{ '--tw-bg-opacity': '0.3' } as React.CSSProperties}
       >
         {/* Focus Button */}
         <button
           type="button"
           onClick={handleFocus}
-          className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
-            isActive
-              ? 'bg-amber-500 text-white'
-              : 'bg-white/50 text-sky-600 hover:bg-amber-100'
-          }`}
+          className="w-6 h-6 rounded-full flex items-center justify-center transition-all"
+          style={{
+            background: isActive ? '#fbbf24' : 'var(--surface-glass)',
+            color: isActive ? '#fff' : 'var(--text-secondary)'
+          }}
           title={isActive ? 'Stop Focus' : 'Start Focus'}
         >
           {isActive ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 ml-0.5" />}
@@ -87,20 +100,22 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
         <button
           type="button"
           onClick={handleToggle}
-          className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
-            task.completed
-              ? 'bg-emerald-500 border-emerald-500'
-              : 'border-sky-400 hover:border-sky-600'
-          }`}
+          className="w-5 h-5 rounded border-2 flex items-center justify-center transition-all"
+          style={{
+            background: task.completed ? '#4ade80' : 'transparent',
+            borderColor: task.completed ? '#4ade80' : 'var(--border-default)'
+          }}
         >
           {task.completed && <Check className="w-3 h-3 text-white" />}
         </button>
 
         {/* Title */}
         <span
-          className={`flex-1 text-sm ${
-            task.completed ? 'line-through text-sky-400/60' : 'text-sky-800'
-          }`}
+          className="flex-1 text-sm"
+          style={{
+            color: task.completed ? 'var(--text-muted)' : 'var(--text-primary)',
+            textDecoration: task.completed ? 'line-through' : 'none'
+          }}
         >
           {task.title}
         </span>
@@ -110,11 +125,11 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`text-xs px-2 py-0.5 rounded-full ${
-              completedSubtasks === subtasks.length
-                ? 'bg-emerald-100 text-emerald-700'
-                : 'bg-sky-100 text-sky-700'
-            }`}
+            className="text-xs px-2 py-0.5 rounded-full"
+            style={{
+              background: completedSubtasks === subtasks.length ? 'var(--status-active-bg)' : 'var(--surface-glass)',
+              color: completedSubtasks === subtasks.length ? 'var(--status-active)' : 'var(--text-secondary)'
+            }}
           >
             {completedSubtasks}/{subtasks.length}
           </button>
@@ -122,7 +137,11 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
           <button
             type="button"
             onClick={() => setIsExpanded(true)}
-            className="text-xs px-2 py-0.5 rounded-full bg-sky-50 text-sky-500 hover:bg-sky-100"
+            className="text-xs px-2 py-0.5 rounded-full"
+            style={{ 
+              background: 'var(--surface-glass)',
+              color: 'var(--text-muted)'
+            }}
             title="Add subtask"
           >
             + Subtask
@@ -132,9 +151,8 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
         {/* Due Date */}
         {task.dueDate && (
           <span
-            className={`text-xs flex items-center gap-1 ${
-              isOverdue() ? 'text-red-500' : 'text-sky-500'
-            }`}
+            className="text-xs flex items-center gap-1"
+            style={{ color: isOverdue() ? '#f87171' : 'var(--text-muted)' }}
           >
             <Calendar className="w-3 h-3" />
             {formatDueDate(task.dueDate)}
@@ -149,15 +167,15 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
             onClick={() => onEdit(task)}
             className="h-7 w-7 p-0"
           >
-            <Pencil className="w-3 h-3" />
+            <Pencil className="w-3 h-3" style={{ color: 'var(--text-muted)' }} />
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsDeleteOpen(true)}
-            className="h-7 w-7 p-0 text-red-500 hover:text-red-700"
+            className="h-7 w-7 p-0"
           >
-            <Trash2 className="w-3 h-3" />
+            <Trash2 className="w-3 h-3" style={{ color: '#ef4444' }} />
           </Button>
         </div>
       </motion.div>
@@ -177,8 +195,8 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
                 style={{
                   background: subtask.completed
                     ? 'linear-gradient(135deg, #38bdf8, #0ea5e9)'
-                    : 'rgba(186,230,253,0.4)',
-                  border: '1.5px solid rgba(125,211,252,0.6)',
+                    : 'var(--surface-glass)',
+                  border: '1.5px solid var(--border-default)',
                 }}
               >
                 {subtask.completed && (
@@ -188,7 +206,7 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
               <span
                 className="text-xs flex-1"
                 style={{
-                  color: subtask.completed ? '#7dd3fc' : '#0369a1',
+                  color: subtask.completed ? 'var(--text-muted)' : 'var(--text-primary)',
                   textDecoration: subtask.completed ? 'line-through' : 'none',
                 }}
               >
@@ -240,10 +258,10 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
             onClick={() => setIsDeleteOpen(false)}
           />
           <div className="dialog-content">
-            <h3 className="text-xl font-semibold mb-2 font-display" style={{ color: '#0c4a6e' }}>
+            <h3 className="text-xl font-semibold mb-2 font-display" style={{ color: 'var(--text-primary)' }}>
               Delete Task
             </h3>
-            <p className="mb-6" style={{ color: '#0369a1' }}>
+            <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
               Are you sure you want to delete "{task.title}"? This action cannot be undone.
             </p>
             <div className="flex justify-end gap-3">
@@ -260,6 +278,57 @@ export function TaskItem({ task, onEdit, dimmed = false }: TaskItemProps) {
                 className="btn-danger"
               >
                 Delete
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Intention Modal for Pomodoro */}
+      {showIntentionModal && (
+        <>
+          <div
+            className="dialog-overlay"
+            onClick={() => setShowIntentionModal(false)}
+          />
+          <div className="dialog-content">
+            <h3 className="text-xl font-semibold mb-2 font-display" style={{ color: 'var(--text-primary)' }}>
+              🍅 What will you accomplish?
+            </h3>
+            <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Set an intention for this 25-minute Pomodoro session
+            </p>
+            <input
+              type="text"
+              value={intention}
+              onChange={(e) => setIntention(e.target.value)}
+              placeholder="e.g., Write the introduction..."
+              className="glass-input w-full px-4 py-3 mb-4"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && intention.trim()) {
+                  handleStartWithIntention()
+                }
+              }}
+            />
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => { setShowIntentionModal(false); setIntention('') }}
+                className="btn-outline"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleStartWithIntention}
+                disabled={!intention.trim()}
+                className="btn-primary"
+                style={{ 
+                  background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)',
+                  opacity: intention.trim() ? 1 : 0.5
+                }}
+              >
+                Start Session
               </Button>
             </div>
           </div>
