@@ -15,7 +15,7 @@ interface TaskItemProps {
 
 export function TaskItem({ task, onEdit, dimmed = false, goalId }: TaskItemProps) {
   const { toggleTask, deleteTask, addSubtask, toggleSubtask, deleteSubtask } = useTaskStore()
-  const { activeTaskId, stopPomodoro } = useFocusStore()
+  const { activeTaskId, stopPomodoro, startPomodoro } = useFocusStore()
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [subtaskInput, setSubtaskInput] = useState('')
@@ -49,8 +49,6 @@ export function TaskItem({ task, onEdit, dimmed = false, goalId }: TaskItemProps
     deleteTask(task.id)
     setIsDeleteOpen(false)
   }
-
-  const { startPomodoro } = useFocusStore()
   
   const handleFocus = () => {
     if (isActive) {
