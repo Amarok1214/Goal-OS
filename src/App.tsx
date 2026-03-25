@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { GoalList, GoalForm } from './components/goals'
 import { TodayView } from './components/today/TodayView'
+import { Dashboard } from './components/dashboard/Dashboard'
 import { CommandPalette } from './components/CommandPalette'
-import { Sun, Target, Plus, Search } from 'lucide-react'
+import { Sun, Target, Plus, Search, BarChart3 } from 'lucide-react'
 import { useGoalStore } from './store/goalStore'
 
 function App() {
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [view, setView] = useState<'today' | 'all'>('today')
+  const [view, setView] = useState<'today' | 'all' | 'dashboard'>('today')
   const [isPaletteOpen, setIsPaletteOpen] = useState(false)
   const { goals } = useGoalStore()
 
@@ -54,6 +55,14 @@ function App() {
           >
             <Target className="w-4 h-4" />
             All Goals
+          </button>
+
+          <button
+            onClick={() => setView('dashboard')}
+            className={`sidebar-nav-item ${view === 'dashboard' ? 'active' : ''}`}
+          >
+            <BarChart3 className="w-4 h-4" />
+            Dashboard
           </button>
         </nav>
 
@@ -104,7 +113,13 @@ function App() {
 
       {/* MAIN CONTENT */}
       <main className="main-content">
-        {view === 'today' ? <TodayView /> : <GoalList />}
+        {view === 'today' ? (
+          <TodayView />
+        ) : view === 'all' ? (
+          <GoalList />
+        ) : (
+          <Dashboard />
+        )}
       </main>
 
       {isFormOpen && (
