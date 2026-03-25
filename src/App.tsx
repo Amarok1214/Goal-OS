@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { GoalList, GoalForm } from './components/goals'
 import { TodayView } from './components/today/TodayView'
 import { Dashboard } from './components/dashboard/Dashboard'
+import { WeeklyPlanner } from './components/planner/WeeklyPlanner'
 import { CommandPalette } from './components/CommandPalette'
-import { Sun, Target, Plus, Search, BarChart3 } from 'lucide-react'
+import { Sun, Target, Plus, Search, BarChart3, Calendar } from 'lucide-react'
 import { useGoalStore } from './store/goalStore'
 
 function App() {
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [view, setView] = useState<'today' | 'all' | 'dashboard'>('today')
+  const [view, setView] = useState<'today' | 'all' | 'dashboard' | 'planner'>('today')
   const [isPaletteOpen, setIsPaletteOpen] = useState(false)
   const { goals } = useGoalStore()
 
@@ -64,6 +65,14 @@ function App() {
             <BarChart3 className="w-4 h-4" />
             Dashboard
           </button>
+
+          <button
+            onClick={() => setView('planner')}
+            className={`sidebar-nav-item ${view === 'planner' ? 'active' : ''}`}
+          >
+            <Calendar className="w-4 h-4" />
+            Planner
+          </button>
         </nav>
 
         {/* Actions */}
@@ -117,8 +126,10 @@ function App() {
           <TodayView />
         ) : view === 'all' ? (
           <GoalList />
-        ) : (
+        ) : view === 'dashboard' ? (
           <Dashboard />
+        ) : (
+          <WeeklyPlanner />
         )}
       </main>
 
