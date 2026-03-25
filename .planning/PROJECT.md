@@ -1,53 +1,132 @@
-# Goal OS
+# Goal OS - Project Overview
 
 ## What This Is
 
-A structured productivity workspace where everything revolves around outcomes. Unlike Notion where you just create pages, every note, task, and journal entry in Goal OS is tied to a specific goal. For individuals who want to focus on what matters by organizing all their work around clear objectives.
+A **personal productivity workspace** for students that connects every task to a goal. Built with React + TypeScript + Tailwind, using localStorage for offline-first persistence.
 
-## Core Value
+**Core Philosophy:** No floating tasks. Every action connects to an outcome.
 
-Every piece of work in the app is connected to a goal — no floating tasks, no disconnected notes. The hierarchy (Vision → Goals → Projects → Tasks) keeps users focused on outcomes, not just activities.
+## Project Type
 
-## Requirements
+**Portfolio Project** - Demonstrates full-stack React skills, state management, and thoughtful UI/UX design.
 
-### Validated
+## Target Users
 
-(None yet — ship to validate)
+**Primary:** Students managing coursework, exams, and personal projects
+**Secondary:** Anyone wanting structured goal-oriented productivity
 
-### Active
+## Features (Current)
 
-- [ ] Goal creation with title, description, deadline, and status tags (Active, Paused, Completed, Someday)
-- [ ] Progress tracking with visual progress bar auto-updated from task completion
-- [ ] Task management — add tasks under each goal, mark them done
-- [ ] Daily actions panel — "Today" view pulling all tasks due or active across every goal
-- [ ] Journaling — attach short journal entries to specific goals for context and reflection
-- [ ] Weekly review template — prompted form with "What worked?", "What didn't?", "What's next?"
+### Implemented
+- ✅ Goal CRUD with status tracking (Active, Paused, Completed, Someday)
+- ✅ Task management with subtasks
+- ✅ Progress tracking with visual progress bars
+- ✅ Today view with overdue/due-soon sections
+- ✅ Pomodoro timer with work/break cycles
+- ✅ Distraction logging during focus sessions
+- ✅ Goal categories (Work, Health, Learning, etc.)
+- ✅ Dark theme with glassmorphism UI
 
-### Out of Scope
+### Planned (Phase 5)
+- 📊 Study Dashboard with analytics
+- 📅 Weekly Study Planner with time blocks
 
-- [Multi-user collaboration] — Single-user focused for MVP
-- [Cloud sync via Supabase] — Using localStorage for offline-first MVP
-- [Advanced analytics] — Basic progress bars only
-- [Notifications/reminders] — Manual check for now
+### Deferred
+- 📝 Journaling (Phase 3)
+- 🔄 Weekly Review template (Phase 3)
+- 🔔 Notifications
+- 📱 Mobile app
 
-## Context
+## Tech Stack
 
-- **Tech Stack**: React + Tailwind (frontend), localStorage for data persistence (offline-first MVP)
-- **Target Users**: Individuals seeking structured productivity focused on outcomes
-- **Reference Apps**: Notion (page-based), Todoist (task-based), GoalsOnTrack (goal-focused)
+| Layer | Technology |
+|-------|------------|
+| Frontend | React 19 + TypeScript |
+| Build | Vite 6 |
+| Styling | Tailwind CSS 4 + custom CSS |
+| Components | shadcn/ui + Lucide icons |
+| State | Zustand with localStorage persistence |
+| Animations | Framer Motion |
+| Charts | Custom SVG (no external library) |
+
+## Data Architecture
+
+```
+┌─────────────────────────────────────────┐
+│                  Stores                   │
+├───────────────┬─────────────────────────┤
+│  goalStore    │ Goals + metadata        │
+│  taskStore    │ Tasks + subtasks        │
+│  focusStore   │ Sessions + distractions │
+│  scheduleStore│ (Phase 5) Planner blocks│
+└───────────────┴─────────────────────────┘
+```
+
+All data persists in localStorage.
+
+## Key Files
+
+```
+src/
+├── App.tsx                    # Main app with sidebar + views
+├── index.css                  # Global styles + CSS variables
+├── types/index.ts             # TypeScript interfaces
+├── store/
+│   ├── goalStore.ts          # Goal state management
+│   ├── taskStore.ts          # Task state management
+│   ├── focusStore.ts          # Pomodoro + sessions
+│   └── scheduleStore.ts       # (Phase 5) Planner blocks
+└── components/
+    ├── goals/                 # GoalCard, GoalForm, GoalList
+    ├── today/                 # TodayView, PomodoroTimer
+    ├── dashboard/             # (Phase 5) Dashboard components
+    ├── planner/               # (Phase 5) Planner components
+    └── ui/                    # shadcn/ui components
+```
+
+## Development History
+
+| Date | Milestone |
+|------|-----------|
+| 2026-03-04 | Project initialized |
+| 2026-03-05 | Phase 1 complete - Foundation & Goals |
+| 2026-03-06 | Phase 2 complete - Tasks & Progress |
+| 2026-03-20 | Phase 4 complete - Focus & Productivity |
+| 2026-03-25 | Phase 5 planned - Analytics & Planning |
+
+## Portfolio Highlights
+
+This project demonstrates:
+
+1. **React Architecture** - Component composition, hooks, state management
+2. **TypeScript** - Full type safety, interfaces, generics
+3. **CSS Styling** - Custom design system, CSS variables, glassmorphism
+4. **User Experience** - Intuitive navigation, helpful feedback, dark theme
+5. **State Management** - Zustand patterns, localStorage persistence
+6. **Performance** - Memoization, efficient re-renders
+
+## Running the Project
+
+```bash
+# Install dependencies
+npm install
+
+# Development server
+npm run dev
+
+# Production build
+npm run build
+```
 
 ## Constraints
 
-- **[Persistence]**: localStorage for MVP — offline-first, no backend required
-- **[Single User]**: No authentication or multi-user for v1
-- **[Simplicity]**: No complex integrations, keep it self-contained
-
-## Key Decisions
-
-| Decision | Rationale | Outcome |
-|----------|-----------|---------|
-| localStorage over Supabase | Faster MVP build, offline-first, simpler | — Pending |
-| Coarse granularity | Fewer broader phases for quick shipping | — Pending |
+| Constraint | Implementation |
+|------------|----------------|
+| Offline-first | localStorage only, no backend |
+| Single-user | No auth, no multi-user |
+| Simple deployment | Static hosting (Vercel/Netlify) |
+| Performance | <500KB bundle (code-splitting future) |
 
 ---
-*Last updated: 2026-03-04 after initialization*
+
+*Project documentation - Last updated: 2026-03-25*
