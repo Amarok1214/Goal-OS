@@ -118,7 +118,7 @@
 6. Active schedule block displays in Pomodoro timer when running
 
 **Plans:** 
-- [ ] 05-01-PLAN.md — Study Dashboard
+- [x] 05-01-PLAN.md — Study Dashboard (COMPLETE)
 - [ ] 05-02-PLAN.md — Weekly Study Planner
 
 ---
@@ -131,7 +131,7 @@
 | 2. Tasks & Progress | 3/3 | Complete | 2026-03-06 |
 | 3. Reflection | 0/1 | Not started | - |
 | 4. Focus & Productivity | 1/1 | Complete | 2026-03-20 |
-| 5. Analytics & Planning | 0/2 | Not started | - |
+| 5. Analytics & Planning | 1/2 | In progress | - |
 
 ---
 
@@ -159,9 +159,9 @@
 | FOCUS-01 | Phase 4 | Complete |
 | FOCUS-02 | Phase 4 | Complete |
 | CAT-01 | Phase 4 | Complete |
-| DASH-01 | Phase 5 | Pending |
-| DASH-02 | Phase 5 | Pending |
-| DASH-03 | Phase 5 | Pending |
+| DASH-01 | Phase 5 | Complete |
+| DASH-02 | Phase 5 | Complete |
+| DASH-03 | Phase 5 | Complete |
 | PLAN-01 | Phase 5 | Pending |
 | PLAN-02 | Phase 5 | Pending |
 | PLAN-03 | Phase 5 | Pending |
