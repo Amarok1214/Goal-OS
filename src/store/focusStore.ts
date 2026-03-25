@@ -73,7 +73,7 @@ interface FocusState {
   getSessionsByDay: (date: Date) => PomodoroSession[]
   getDailyFocusMinutes: (date: Date) => number
   getFocusStreak: () => number
-  getGoalsCompletedThisWeek: () => number
+  getGoalsWorkedOnThisWeek: () => number
   getWeeklyFocusHours: () => number[]
   getDistractionsThisWeek: () => number
 }
@@ -314,7 +314,7 @@ export const useFocusStore = create<FocusState>()(
         return streak
       },
       
-      getGoalsCompletedThisWeek: () => {
+      getGoalsWorkedOnThisWeek: () => {
         const { sessions } = get()
         const today = new Date()
         const dayOfWeek = today.getDay()

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { Task, TaskStore } from '../types'
+import type { TaskStore } from '../types'
 
 export const useTaskStore = create<TaskStore>()(
   persist(

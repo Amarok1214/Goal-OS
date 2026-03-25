@@ -5,12 +5,12 @@ import { FocusChart } from './FocusChart'
 import { useFocusStore } from '../../store/focusStore'
 
 export function Dashboard() {
-  const { getWeeklyFocusHours, getFocusStreak, getGoalsCompletedThisWeek, getWeekPomodoros, getDistractionsThisWeek } = useFocusStore()
+  const { getWeeklyFocusHours, getFocusStreak, getGoalsWorkedOnThisWeek, getWeekPomodoros, getDistractionsThisWeek } = useFocusStore()
   
   // Memoized calculations
   const weeklyHours = useMemo(() => getWeeklyFocusHours(), [getWeeklyFocusHours])
   const focusStreak = useMemo(() => getFocusStreak(), [getFocusStreak])
-  const goalsCompleted = useMemo(() => getGoalsCompletedThisWeek(), [getGoalsCompletedThisWeek])
+  const goalsCompleted = useMemo(() => getGoalsWorkedOnThisWeek(), [getGoalsWorkedOnThisWeek])
   const sessionsCompleted = useMemo(() => getWeekPomodoros(), [getWeekPomodoros])
   const distractions = useMemo(() => getDistractionsThisWeek(), [getDistractionsThisWeek])
   

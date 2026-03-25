@@ -1,5 +1,27 @@
 export type GoalStatus = 'active' | 'paused' | 'completed' | 'someday'
 
+export type GoalCategory = 'work' | 'health' | 'learning' | 'finance' | 'creative' | 'social' | 'other'
+
+export const CATEGORY_LABELS: Record<GoalCategory, string> = {
+  work: '💼 Work',
+  health: '💪 Health',
+  learning: '📚 Learning',
+  finance: '💰 Finance',
+  creative: '🎨 Creative',
+  social: '👥 Social',
+  other: '📌 Other',
+}
+
+export const CATEGORY_COLORS: Record<GoalCategory, string> = {
+  work: '#3b82f6',
+  health: '#22c55e',
+  learning: '#a855f7',
+  finance: '#eab308',
+  creative: '#ec4899',
+  social: '#f97316',
+  other: '#64748b',
+}
+
 export interface GoalLink {
   label: string
   url: string
@@ -11,6 +33,7 @@ export interface Goal {
   description: string
   deadline: Date | null
   status: GoalStatus
+  category?: GoalCategory
   links?: GoalLink[]
   subtasks?: SubTask[]
   createdAt: Date

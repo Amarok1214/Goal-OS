@@ -5,6 +5,7 @@ import { useScheduleStore, DAY_NAMES, getWeekStart } from '../../store/scheduleS
 import { useGoalStore } from '../../store/goalStore'
 import { ScheduleBlockItem } from './ScheduleBlock'
 import { BlockForm } from './BlockForm'
+import { WeeklySummary } from './WeeklySummary'
 
 // Time slots from 6 AM to 11 PM (17 hours)
 const HOURS = Array.from({ length: 18 }, (_, i) => i + 6) // 6, 7, 8, ..., 23
@@ -229,6 +230,9 @@ export function WeeklyPlanner() {
           </div>
         </div>
       </div>
+      
+      {/* Weekly Summary */}
+      <WeeklySummary />
       
       {/* Block Form Modal */}
       <AnimatePresence>

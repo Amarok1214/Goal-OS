@@ -40,9 +40,11 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
+    // If using custom className (like btn-primary), apply only that
+    const useCustomClass = className?.startsWith('btn-')
     return (
       <button
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={useCustomClass ? className : cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
       />
