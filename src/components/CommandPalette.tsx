@@ -1,13 +1,15 @@
 import { useEffect, useState, useRef } from 'react'
 import { Command } from 'cmdk'
 import { useGoalStore } from '../store/goalStore'
-import { Target, Plus, Calendar, Search, X } from 'lucide-react'
+import { Target, Plus, Calendar, Search, X, BarChart3 } from 'lucide-react'
 
 interface CommandPaletteProps {
   open: boolean
   setOpen: (open: boolean) => void
   onNavigateToGoals: () => void
   onNavigateToToday: () => void
+  onNavigateToDashboard: () => void
+  onNavigateToPlanner: () => void
   onOpenGoalForm: () => void
 }
 
@@ -16,6 +18,8 @@ export function CommandPalette({
   setOpen, 
   onNavigateToGoals, 
   onNavigateToToday,
+  onNavigateToDashboard,
+  onNavigateToPlanner,
   onOpenGoalForm 
 }: CommandPaletteProps) {
   const { goals } = useGoalStore()
@@ -120,6 +124,28 @@ export function CommandPalette({
             >
               <Calendar className="w-4 h-4" style={{ color: 'var(--text-accent)' }} />
               <span>Go to Today</span>
+            </Command.Item>
+            <Command.Item
+              onSelect={() => {
+                onNavigateToDashboard()
+                setOpen(false)
+              }}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer data-[selected=true]:bg-[var(--surface-glass-hover)]"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              <BarChart3 className="w-4 h-4" style={{ color: 'var(--text-accent)' }} />
+              <span>Go to Dashboard</span>
+            </Command.Item>
+            <Command.Item
+              onSelect={() => {
+                onNavigateToPlanner()
+                setOpen(false)
+              }}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer data-[selected=true]:bg-[var(--surface-glass-hover)]"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              <Calendar className="w-4 h-4" style={{ color: 'var(--text-accent)' }} />
+              <span>Go to Planner</span>
             </Command.Item>
           </Command.Group>
 

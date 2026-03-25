@@ -146,6 +146,8 @@ function App() {
         setOpen={setIsPaletteOpen}
         onNavigateToGoals={() => setView('all')}
         onNavigateToToday={() => setView('today')}
+        onNavigateToDashboard={() => setView('dashboard')}
+        onNavigateToPlanner={() => setView('planner')}
         onOpenGoalForm={() => {
           setIsFormOpen(true)
         }}
