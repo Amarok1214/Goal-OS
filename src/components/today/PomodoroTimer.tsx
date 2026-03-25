@@ -9,6 +9,8 @@ import {
   playChime 
 } from '../../store/focusStore'
 import { useTaskStore } from '../../store/taskStore'
+import { useScheduleStore } from '../../store/scheduleStore'
+import { useGoalStore } from '../../store/goalStore'
 import { 
   StopCircle, 
   Coffee, 
@@ -17,7 +19,8 @@ import {
   SkipForward,
   Target,
   AlertCircle,
-  X
+  X,
+  Calendar
 } from 'lucide-react'
 
 export function PomodoroTimer() {
@@ -38,6 +41,8 @@ export function PomodoroTimer() {
   } = useFocusStore()
   
   const { tasks } = useTaskStore()
+  const { getCurrentBlock } = useScheduleStore()
+  const { getGoalById } = useGoalStore()
   
   const [showIntentionModal, setShowIntentionModal] = useState(false)
   const [intention, setIntention] = useState('')
@@ -47,6 +52,10 @@ export function PomodoroTimer() {
   const [pendingAction, setPendingAction] = useState<'startBreak' | 'startWork' | null>(null)
   
   const activeTask = tasks.find((t) => t.id === activeTaskId)
+  
+  // Get current schedule block if any
+  const currentBlock = pomodoroPhase === 'work' && isRunning ? getCurrentBlock() : null
+  const linkedGoal = currentBlock?.goalId ? getGoalById(currentBlock.goalId) : null
   
   // Timer tick
   useEffect(() => {
@@ -251,6 +260,34 @@ export function PomodoroTimer() {
                 Session Intention
               </p>
               <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{sessionIntention}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        {/* Active Schedule Block indicator */}
+        <AnimatePresence>
+          {currentBlock && pomodoroPhase === 'work' && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-4 p-3 rounded-lg"
+              style={{ 
+                background: 'rgba(168, 85, 247, 0.1)', 
+                border: '1px solid rgba(168, 85, 247, 0.3)' 
+              }}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <Calendar className="w-4 h-4" style={{ color: '#a855f7' }} />
+                <p className="text-xs font-medium" style={{ color: '#a855f7' }}>
+                  Currently: {linkedGoal ? linkedGoal.title : currentBlock.title}
+                </p>
+              </div>
+              {currentBlock.goalId && (
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                  Scheduled study block
+                </p>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
