@@ -184,7 +184,7 @@ export function TaskItemCompact({ task, onEdit, goalId, isDimmed = false }: Task
 
       {/* Subtasks */}
       <AnimatePresence>
-        {isExpanded && hasSubtasks && (
+        {(isExpanded || showAddSubtask) && hasSubtasks && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -275,6 +275,49 @@ export function TaskItemCompact({ task, onEdit, goalId, isDimmed = false }: Task
                   Add subtask
                 </button>
               )}
+            </div>
+          </motion.div>
+        )}
+        
+        {/* Add subtask form for tasks with NO subtasks yet */}
+        {showAddSubtask && !hasSubtasks && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden ml-6 mt-1"
+          >
+            <div className="flex items-center gap-2 py-1">
+              <div className="w-3.5" />
+              <input
+                type="text"
+                value={subtaskInput}
+                onChange={(e) => setSubtaskInput(e.target.value)}
+                placeholder="Add subtask..."
+                className="flex-1 text-xs px-2 py-1 rounded border"
+                style={{ 
+                  background: 'rgba(255,255,255,0.05)', 
+                  borderColor: 'rgba(255,255,255,0.15)',
+                  color: 'var(--text-primary)'
+                }}
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddSubtask()
+                  if (e.key === 'Escape') { setShowAddSubtask(false); setSubtaskInput('') }
+                }}
+                onBlur={() => {
+                  if (!subtaskInput.trim()) setShowAddSubtask(false)
+                }}
+              />
+              <button
+                type="button"
+                onClick={handleAddSubtask}
+                className="p-1 rounded"
+                style={{ background: '#3b82f6', color: '#fff' }}
+              >
+                <Check className="w-3 h-3" />
+              </button>
             </div>
           </motion.div>
         )}
