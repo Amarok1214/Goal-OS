@@ -130,8 +130,8 @@ export function TaskItemCompact({ task, onEdit, goalId, isDimmed = false }: Task
           </button>
         )}
 
-        {/* + Subtask button (show on hover) */}
-        {!hasSubtasks && !task.completed && (
+        {/* + Subtask button (show on hover) - for ALL incomplete tasks */}
+        {!task.completed && (
           <button
             type="button"
             onClick={() => setShowAddSubtask(true)}
