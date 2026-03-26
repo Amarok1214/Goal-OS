@@ -53,6 +53,7 @@ interface FocusState {
   
   // Actions
   startPomodoro: (taskId: string, goalId: string, taskTitle: string, intention: string) => void
+  startStandalonePomodoro: (intention: string) => void
   pausePomodoro: () => void
   resumePomodoro: () => void
   skipPhase: () => void
@@ -98,6 +99,18 @@ export const useFocusStore = create<FocusState>()(
         set({
           activeTaskId: taskId,
           activeGoalId: goalId,
+          startTime: Date.now(),
+          sessionIntention: intention,
+          pomodoroPhase: 'work',
+          pomodoroTimeLeft: POMODORO_WORK,
+          isRunning: true,
+        })
+      },
+      
+      startStandalonePomodoro: (intention) => {
+        set({
+          activeTaskId: null, // No task linked
+          activeGoalId: null,
           startTime: Date.now(),
           sessionIntention: intention,
           pomodoroPhase: 'work',

@@ -32,6 +32,7 @@ export function PomodoroTimer() {
     isRunning,
     sessionIntention,
     startPomodoro,
+    startStandalonePomodoro,
     pausePomodoro,
     resumePomodoro,
     skipPhase,
@@ -46,6 +47,8 @@ export function PomodoroTimer() {
   
   const [showIntentionModal, setShowIntentionModal] = useState(false)
   const [intention, setIntention] = useState('')
+  const [showStandaloneModal, setShowStandaloneModal] = useState(false)
+  const [standaloneIntention, setStandaloneIntention] = useState('')
   const [showDistractionInput, setShowDistractionInput] = useState(false)
   const [distractionText, setDistractionText] = useState('')
   const [showPhasePrompt, setShowPhasePrompt] = useState(false)
@@ -109,6 +112,12 @@ export function PomodoroTimer() {
     startPomodoro(activeTaskId, goalId, taskTitle, intention)
     setShowIntentionModal(false)
     setIntention('')
+  }
+  
+  const handleStartStandalone = () => {
+    startStandalonePomodoro(standaloneIntention.trim())
+    setShowStandaloneModal(false)
+    setStandaloneIntention('')
   }
   
   const handleDistractionSubmit = () => {
@@ -176,17 +185,109 @@ export function PomodoroTimer() {
     : POMODORO_LONG_BREAK
   const progress = ((totalTime - pomodoroTimeLeft) / totalTime) * 100
   
-  // No active task - show trigger button
+  // No active task - show standalone Pomodoro option
   if (!activeTaskId || !activeTask) {
     return (
-      <div className="glass-strong p-4 mb-6" style={{
-        background: 'rgba(255, 255, 255, 0.05)',
-        border: '1px solid rgba(255,255,255,0.1)',
-      }}>
-        <p className="text-sm text-center" style={{ color: 'var(--text-muted)' }}>
-          Click the play button on a task to start a Pomodoro session
-        </p>
-      </div>
+      <>
+        <div 
+          className="glass-strong p-6 mb-6 text-center"
+          style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255,255,255,0.1)',
+          }}
+        >
+          <div className="mb-4">
+            <div 
+              className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)' }}
+            >
+              <Target className="w-8 h-8 text-white" />
+            </div>
+            <p className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+              Ready to Focus?
+            </p>
+            <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
+              Start a 25-minute Pomodoro session without linking to a task
+            </p>
+          </div>
+          
+          <button
+            onClick={() => setShowStandaloneModal(true)}
+            className="px-6 py-2.5 rounded-lg font-medium text-white transition-all"
+            style={{ 
+              background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)',
+              boxShadow: '0 4px 12px rgba(14, 165, 233, 0.3)',
+            }}
+          >
+            Start Standalone Pomodoro
+          </button>
+          
+          <p className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
+            Or click the focus button on any task to link it
+          </p>
+        </div>
+        
+        {/* Standalone Modal */}
+        <AnimatePresence>
+          {showStandaloneModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div 
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={() => setShowStandaloneModal(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative glass rounded-xl p-6 w-full max-w-md"
+                style={{ background: 'rgba(26, 47, 69, 0.98)' }}
+              >
+                <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  Start Focus Session
+                </h3>
+                <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+                  Set an optional intention for this Pomodoro (or leave blank)
+                </p>
+                <input
+                  type="text"
+                  value={standaloneIntention}
+                  onChange={(e) => setStandaloneIntention(e.target.value)}
+                  placeholder="What will you focus on? (optional)"
+                  className="glass-input w-full px-4 py-3 mb-4"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleStartStandalone()
+                    }
+                  }}
+                />
+                <div className="flex gap-3 justify-end">
+                  <button
+                    onClick={() => setShowStandaloneModal(false)}
+                    className="btn-ghost"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleStartStandalone}
+                    className="btn-primary"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)',
+                    }}
+                  >
+                    Start Session
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
     )
   }
   
