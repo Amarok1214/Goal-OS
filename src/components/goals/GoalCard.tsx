@@ -75,7 +75,7 @@ const TASK_GROUPS: TaskGroupConfig[] = [
 export function GoalCard({ goal }: GoalCardProps) {
   const { deleteGoal } = useGoalStore()
   const { getTasksByGoal } = useTaskStore()
-  const { activeTaskId, stopPomodoro } = useFocusStore()
+  const { activeTaskId, stopPomodoro, startPomodoro } = useFocusStore()
   
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
@@ -86,6 +86,11 @@ export function GoalCard({ goal }: GoalCardProps) {
     remaining: true,
     completed: false,
   })
+
+  // Focus modal state
+  const [showFocusModal, setShowFocusModal] = useState(false)
+  const [focusIntention, setFocusIntention] = useState('')
+  const [focusTaskId, setFocusTaskId] = useState<string | null>(null)
 
   const goalTasks = getTasksByGoal(goal.id)
   const status = statusConfig[goal.status]
@@ -161,7 +166,21 @@ export function GoalCard({ goal }: GoalCardProps) {
       if (activeTaskId) {
         stopPomodoro()
       }
-      // The intention modal will be shown by TaskItemCompact
+      // Open focus modal with the first uncompleted task
+      setFocusTaskId(firstUncompleted.id)
+      setFocusIntention('')
+      setShowFocusModal(true)
+    }
+  }
+
+  // Start Pomodoro with intention
+  const handleStartFocusWithIntention = () => {
+    if (focusTaskId) {
+      const task = goalTasks.find(t => t.id === focusTaskId)
+      startPomodoro(focusTaskId, goal.id, task?.title || '', focusIntention)
+      setShowFocusModal(false)
+      setFocusIntention('')
+      setFocusTaskId(null)
     }
   }
 
@@ -542,6 +561,47 @@ export function GoalCard({ goal }: GoalCardProps) {
               >
                 Delete
               </Button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Focus Modal */}
+      {showFocusModal && (
+        <>
+          <div className="dialog-overlay" onClick={() => setShowFocusModal(false)} />
+          <div className="dialog-content">
+            <h3 className="text-xl font-semibold mb-2 font-display" style={{ color: 'var(--text-primary)' }}>
+              Start Focus Session
+            </h3>
+            <p className="mb-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Set an intention for this Pomodoro session
+            </p>
+            <input
+              type="text"
+              value={focusIntention}
+              onChange={(e) => setFocusIntention(e.target.value)}
+              placeholder="What will you focus on?"
+              className="glass-input w-full px-3 py-2 mb-4 text-sm"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && focusIntention.trim()) handleStartFocusWithIntention()
+                if (e.key === 'Escape') { setShowFocusModal(false); setFocusIntention(''); setFocusTaskId(null) }
+              }}
+            />
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => { setShowFocusModal(false); setFocusIntention(''); setFocusTaskId(null) }}
+                className="btn-ghost text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleStartFocusWithIntention}
+                className="btn-primary text-sm"
+              >
+                Start Focus
+              </button>
             </div>
           </div>
         </>
