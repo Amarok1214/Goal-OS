@@ -299,13 +299,16 @@ export const useFocusStore = create<FocusState>()(
         let streak = 0
         let date = new Date()
         
-        // Check if today has sessions
+        // Count consecutive days ending with today (or going back if today has no sessions)
+        // A streak of N means: today has sessions, yesterday had sessions, ..., (N-1) days ago had sessions
+        
+        // Check if today has sessions - if not, streak is 0
         const todayMinutes = get().getDailyFocusMinutes(date)
         if (todayMinutes === 0) {
-          // Check yesterday - if no sessions today, we might be at day 0 of streak
-          date.setDate(date.getDate() - 1)
+          return 0 // No streak if today is empty
         }
         
+        // Today has sessions, count backwards
         while (get().getDailyFocusMinutes(date) > 0) {
           streak++
           date.setDate(date.getDate() - 1)
