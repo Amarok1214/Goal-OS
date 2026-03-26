@@ -4,22 +4,22 @@
 
 ![Dark Theme Preview](docs/preview-dark.png)
 
-## ✨ Features
+## Features
 
-### 📊 Study Dashboard
+### Study Dashboard
 - **Focus Metrics** — Track total focus time, sessions completed, and daily trends
 - **Weekly Analytics** — Visual bar chart showing focus distribution across the week
 - **Focus Streak** — Consecutive days with completed Pomodoro sessions
 - **Distraction Summary** — Insights into focus quality
 
-### 📅 Weekly Study Planner
+### Weekly Study Planner
 - **7-Day Grid View** — Visual weekly calendar from 6 AM to 11 PM
 - **Time Blocks** — Schedule study sessions with start time and duration
 - **Goal Linking** — Connect blocks to existing goals for accountability
 - **Recurring Blocks** — Repeating weekly schedules
 - **Week Navigation** — Jump between weeks easily
 
-### 🍅 Pomodoro Timer
+### Pomodoro Timer
 - **25/5/15 Cycles** — Work, short break, long break with auto-transition
 - **Session Intentions** — Set goals before each focus session
 - **Distraction Logging** — Track interruptions without losing flow
@@ -27,7 +27,7 @@
 - **Browser Notifications** — Alerts when phases complete
 - **Audio Chimes** — Pleasant sound when sessions end
 
-### 🎯 Goal Management
+### Goal Management
 - **Status Tracking** — Active, Paused, Completed, Someday
 - **Categories** — Work, Health, Learning, Finance, Creative, Social
 - **Progress Rings** — Visual completion percentage
@@ -35,13 +35,13 @@
 - **Deadline Tracking** — Overdue and due-soon indicators
 - **Pace Estimation** — "On track" vs "Behind pace"
 
-### 🌙 Dark Theme
+### Dark Theme
 - **Glassmorphism UI** — Modern, frosted-glass aesthetic
 - **Eye-Friendly Palette** — Deep blue-gray tones for reduced strain
 - **Ambient Animations** — Subtle floating gradient orbs
 - **Consistent Typography** — Clear hierarchy with DM Sans + Syne fonts
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
@@ -52,7 +52,7 @@
 | **State** | Zustand + localStorage |
 | **Animation** | Framer Motion |
 
-## 🚀 Getting Started
+## Getting Started
 
 ```bash
 # Clone the repository
@@ -69,29 +69,29 @@ npm run dev
 npm run build
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
 ├── App.tsx                 # Main app with sidebar + view routing
-├── index.css                # Global styles, CSS variables, dark theme
+├── index.css               # Global styles, CSS variables, dark theme
 ├── types/
 │   └── index.ts            # TypeScript interfaces
 ├── store/
 │   ├── goalStore.ts        # Goal CRUD operations
 │   ├── taskStore.ts        # Task management
 │   ├── focusStore.ts       # Pomodoro + analytics helpers
-│   └── scheduleStore.ts    # Weekly planner blocks
+│   └── scheduleStore.ts     # Weekly planner blocks
 └── components/
-    ├── dashboard/          # Study Dashboard components
-    ├── planner/           # Weekly Planner components
-    ├── goals/             # Goal, Task, Form components
-    ├── today/             # Today View, Pomodoro Timer
-    ├── ui/                # shadcn/ui components
-    └── CommandPalette.tsx  # ⌘K command palette
+    ├── dashboard/           # Study Dashboard components
+    ├── planner/            # Weekly Planner components
+    ├── goals/              # Goal, Task, Form components
+    ├── today/              # Today View, Pomodoro Timer
+    ├── ui/                 # shadcn/ui components
+    └── CommandPalette.tsx  # Command palette
 ```
 
-## 📈 Development Timeline
+## Development Timeline
 
 | Date | Phase | Description |
 |------|-------|-------------|
@@ -100,7 +100,7 @@ src/
 | 2026-03-20 | Phase 4 | Focus & Productivity — Pomodoro timer, categories |
 | 2026-03-25 | Phase 5 | Analytics & Planning — Dashboard, Weekly Planner |
 
-## 🎓 What I Learned
+## What I Learned
 
 This project demonstrates:
 
@@ -111,10 +111,6 @@ This project demonstrates:
 - **User Experience** — Intuitive navigation, helpful feedback, dark mode
 - **Systematic Development** — Phase-based planning, requirement tracking
 
-## 📝 License
+## License
 
 MIT — Feel free to use this for learning or as a starting point for your own projects.
-
----
-
-Built with ❤️ for better study habits
