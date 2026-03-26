@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Plus, ChevronRight, ChevronDown, Pencil, Trash2 } from 'lucide-react'
 import { useTaskStore } from '../../store/taskStore'
@@ -21,6 +21,13 @@ export function TaskItemCompact({ task, onEdit, goalId, isDimmed = false }: Task
   const [subtaskInput, setSubtaskInput] = useState('')
   const [showIntentionModal, setShowIntentionModal] = useState(false)
   const [intention, setIntention] = useState('')
+  
+  // Reset subtask form state when task changes
+  useEffect(() => {
+    setShowAddSubtask(false)
+    setSubtaskInput('')
+    setIsExpanded(false)
+  }, [task.id])
 
   const subtasks = task.subtasks || []
   const completedSubtasks = subtasks.filter(s => s.completed).length
