@@ -47,8 +47,6 @@ export function TodayView() {
 
   return (
     <div>
-      <PomodoroTimer />
-
       {/* Greeting */}
       <div className="glass p-6 mb-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
@@ -106,6 +104,8 @@ export function TodayView() {
           </div>
         </div>
       </div>
+
+      <PomodoroTimer />
 
       {/* Overdue section */}
       {overdue.length > 0 && (
