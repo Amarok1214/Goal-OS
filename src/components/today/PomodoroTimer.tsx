@@ -185,8 +185,10 @@ export function PomodoroTimer() {
     : POMODORO_LONG_BREAK
   const progress = ((totalTime - pomodoroTimeLeft) / totalTime) * 100
   
-  // No active task - show standalone Pomodoro option
-  if (!activeTaskId || !activeTask) {
+  // No active task and not in standalone mode - show standalone Pomodoro option
+  // Show active timer if: has linked task OR (no task but phase is active/running)
+  const isStandaloneMode = !activeTaskId && pomodoroPhase !== 'idle'
+  if (!activeTaskId && !isStandaloneMode) {
     return (
       <>
         <div 
@@ -326,7 +328,7 @@ export function PomodoroTimer() {
                 {colors.label}
               </p>
               <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                {activeTask.title}
+                {activeTask?.title || (sessionIntention || 'Standalone Session')}
               </p>
             </div>
           </div>
