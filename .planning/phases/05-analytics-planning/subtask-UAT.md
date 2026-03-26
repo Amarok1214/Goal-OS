@@ -8,15 +8,15 @@ updated: 2026-03-26T00:00:00Z
 
 ## Current Test
 
-number: 1
-name: Add Subtask - Task With No Subtasks
+number: 2
+name: Add Subtask - Task With Existing Subtasks
 expected: |
-  Create a task (or find an existing task with no subtasks).
-  Hover over the task to reveal the "+ Sub" button.
-  Click the "+ Sub" button.
-  An inline input field appears below the task.
-  Type a subtask title and press Enter or click the checkmark.
-  The subtask is added and appears below the task.
+  Find or create a task that already has subtasks.
+  Expand the subtask list if collapsed (click chevron or badge).
+  Click the "+ Add subtask" button inside the expanded list.
+  An inline input field appears.
+  Type a subtask and submit (Enter or checkmark).
+  The new subtask appears in the list with the others.
 awaiting: user response
 
 ## Tests
@@ -27,7 +27,9 @@ result: pending
 
 ### 2. Add Subtask - Task With Existing Subtasks
 expected: Find or create a task that already has subtasks. Expand the subtask list if collapsed. Click the "+ Add subtask" button inside the expanded list. An inline input field appears. Type a subtask and submit. The new subtask appears in the list with the others.
-result: pending
+result: issue
+reported: "i cant add a subtask to a task that already has subtask"
+severity: major
 
 ### 3. Expand/Collapse Subtasks
 expected: Find a task with subtasks. Click on the expand/collapse toggle (chevron icon or subtask count badge). The subtask list expands or collapses smoothly with animation. The chevron icon rotates to indicate state.
@@ -61,10 +63,18 @@ result: pending
 
 total: 9
 passed: 0
-issues: 0
-pending: 9
+issues: 1
+pending: 8
 skipped: 0
 
 ## Gaps
 
-[none yet]
+- truth: "Add subtask button appears inside expanded subtask list for tasks with existing subtasks"
+  status: failed
+  reason: "User reported: i cant add a subtask to a task that already has subtask"
+  severity: major
+  test: 2
+  root_cause: ""
+  artifacts: []
+  missing: []
+  debug_session: ""
