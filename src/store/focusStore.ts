@@ -79,6 +79,40 @@ interface FocusState {
   getDistractionsThisWeek: () => number
 }
 
+// Background timer that runs independently of components
+// This ensures the timer continues even when navigating between pages
+let backgroundIntervalId: ReturnType<typeof setInterval> | null = null
+
+const startBackgroundTimer = () => {
+  if (backgroundIntervalId) return // Already running
+  
+  backgroundIntervalId = setInterval(() => {
+    const state = useFocusStore.getState()
+    if (state.isRunning) {
+      state.tick()
+      
+      // Play chime and show notification when phase completes
+      if (state.pomodoroTimeLeft === 0 && state.pomodoroPhase !== 'idle') {
+        playChime()
+        
+        if (Notification.permission === 'granted') {
+          new Notification(
+            state.pomodoroPhase === 'work' ? 'Work session complete!' : 'Break over!',
+            { body: state.pomodoroPhase === 'work' ? 'Time for a break' : 'Ready to focus again?' }
+          )
+        }
+      }
+    }
+  }, 1000)
+}
+
+const stopBackgroundTimer = () => {
+  if (backgroundIntervalId) {
+    clearInterval(backgroundIntervalId)
+    backgroundIntervalId = null
+  }
+}
+
 export const useFocusStore = create<FocusState>()(
   persist(
     (set, get) => ({
@@ -96,6 +130,7 @@ export const useFocusStore = create<FocusState>()(
       startPomodoro: (taskId, goalId, _taskTitle, intention) => {
         // Note: taskTitle is intentionally unused here as it's stored in sessionIntention
         // The actual task title is saved when the session completes
+        startBackgroundTimer()
         set({
           activeTaskId: taskId,
           activeGoalId: goalId,
@@ -108,6 +143,7 @@ export const useFocusStore = create<FocusState>()(
       },
       
       startStandalonePomodoro: (intention) => {
+        startBackgroundTimer()
         set({
           activeTaskId: null, // No task linked
           activeGoalId: null,
@@ -121,7 +157,10 @@ export const useFocusStore = create<FocusState>()(
       
       pausePomodoro: () => set({ isRunning: false }),
       
-      resumePomodoro: () => set({ isRunning: true }),
+      resumePomodoro: () => {
+        startBackgroundTimer()
+        set({ isRunning: true })
+      },
       
       skipPhase: () => {
         const { pomodoroPhase, pomodorosCompleted } = get()
@@ -155,6 +194,7 @@ export const useFocusStore = create<FocusState>()(
       
       stopPomodoro: () => {
         const state = get()
+        stopBackgroundTimer()
         
         // Save completed work session if it was a work session that was running
         if (state.pomodoroPhase === 'work' && state.activeTaskId && state.startTime) {
