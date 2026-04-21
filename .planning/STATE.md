@@ -20,7 +20,7 @@ progress:
 ## Current Position
 
 - **Phase:** 6 - Data & Backend
-- **Plan:** 06-03 complete
+- **Plan:** 06-04 complete
 - **Status:** In progress
 - **Progress:** [██████░░░] 70%
 
@@ -167,18 +167,20 @@ progress:
 - [ ] 06-01-PLAN.md — Supabase Setup & Client
 - [ ] 06-02-PLAN.md — Migrate Stores to Supabase
 - [x] 06-03-PLAN.md — Settings + Export/Import ✓
+- [x] 06-04-PLAN.md — Connect Settings to Pomodoro ✓
 
 **Features implemented:**
 1. Settings page with preferences management ✓
 2. Data export to JSON ✓
 3. Data import from JSON with validation ✓
 4. Clear all data with confirmation ✓
+5. Pomodoro timer connected to settings ✓
 
 ## Next Steps
 
-1. 06-03 complete - Settings and Export/Import done
+1. 06-04 complete - Pomodoro now uses settings values
 2. Continue with 06-05 (Global Search) or 06-06 (Task Due Dates & Priority)
 
 ---
 
-*State updated: 2026-04-21 - Phase 6 plan 06-03 complete*
+*State updated: 2026-04-21 - Phase 6 plan 06-04 complete*
