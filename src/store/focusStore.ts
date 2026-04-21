@@ -1,10 +1,21 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
+import { useSettingsStore } from './settingsStore'
 
-// Timer durations in seconds
-export const POMODORO_WORK = 25 * 60 // 25 minutes
-export const POMODORO_SHORT_BREAK = 5 * 60 // 5 minutes
-export const POMODORO_LONG_BREAK = 15 * 60 // 15 minutes
+// Get duration values from settings (converted from minutes to seconds)
+const getSettingsDurations = () => {
+  const settings = useSettingsStore.getState()
+  return {
+    pomodoroWork: settings.pomodoroWork * 60,
+    pomodoroShortBreak: settings.pomodoroShortBreak * 60,
+    pomodoroLongBreak: settings.pomodoroLongBreak * 60,
+  }
+}
+
+// Getter functions for dynamic duration values based on settings
+export const getPomodoroWork = () => getSettingsDurations().pomodoroWork
+export const getPomodoroShortBreak = () => getSettingsDurations().pomodoroShortBreak
+export const getPomodoroLongBreak = () => getSettingsDurations().pomodoroLongBreak
 export const POMODOROS_BEFORE_LONG_BREAK = 4
 
 export type PomodoroPhase = 'work' | 'shortBreak' | 'longBreak' | 'idle'
@@ -121,7 +132,7 @@ export const useFocusStore = create<FocusState>()(
       startTime: null,
       sessionIntention: '',
       pomodoroPhase: 'idle',
-      pomodoroTimeLeft: POMODORO_WORK,
+      pomodoroTimeLeft: getPomodoroWork(),
       pomodorosCompleted: 0,
       isRunning: false,
       sessions: [],
@@ -137,7 +148,7 @@ export const useFocusStore = create<FocusState>()(
           startTime: Date.now(),
           sessionIntention: intention,
           pomodoroPhase: 'work',
-          pomodoroTimeLeft: POMODORO_WORK,
+          pomodoroTimeLeft: getPomodoroWork(),
           isRunning: true,
         })
       },
@@ -150,7 +161,7 @@ export const useFocusStore = create<FocusState>()(
           startTime: Date.now(),
           sessionIntention: intention,
           pomodoroPhase: 'work',
-          pomodoroTimeLeft: POMODORO_WORK,
+          pomodoroTimeLeft: getPomodoroWork(),
           isRunning: true,
         })
       },
@@ -173,16 +184,16 @@ export const useFocusStore = create<FocusState>()(
           newCompleted = pomodorosCompleted + 1
           if (newCompleted >= POMODOROS_BEFORE_LONG_BREAK) {
             nextPhase = 'longBreak'
-            nextTime = POMODORO_LONG_BREAK
+            nextTime = getPomodoroLongBreak()
             newCompleted = 0 // Reset after long break
           } else {
             nextPhase = 'shortBreak'
-            nextTime = POMODORO_SHORT_BREAK
+            nextTime = getPomodoroShortBreak()
           }
         } else {
           // Skip break, back to work
           nextPhase = 'work'
-          nextTime = POMODORO_WORK
+          nextTime = getPomodoroWork()
         }
         
         set({
@@ -205,7 +216,7 @@ export const useFocusStore = create<FocusState>()(
             goalId: state.activeGoalId || '',
             startTime: state.startTime,
             endTime: Date.now(),
-            duration: POMODORO_WORK - state.pomodoroTimeLeft,
+            duration: getPomodoroWork() - state.pomodoroTimeLeft,
             intention: state.sessionIntention,
             completedPomodoros: 1,
             type: 'work',
@@ -218,7 +229,7 @@ export const useFocusStore = create<FocusState>()(
             startTime: null,
             sessionIntention: '',
             pomodoroPhase: 'idle',
-            pomodoroTimeLeft: POMODORO_WORK,
+            pomodoroTimeLeft: getPomodoroWork(),
             isRunning: false,
           }))
         } else {
@@ -228,7 +239,7 @@ export const useFocusStore = create<FocusState>()(
             startTime: null,
             sessionIntention: '',
             pomodoroPhase: 'idle',
-            pomodoroTimeLeft: POMODORO_WORK,
+            pomodoroTimeLeft: getPomodoroWork(),
             isRunning: false,
           })
         }
@@ -256,7 +267,7 @@ export const useFocusStore = create<FocusState>()(
                 goalId: get().activeGoalId || '',
                 startTime,
                 endTime: Date.now(),
-                duration: POMODORO_WORK,
+                duration: getPomodoroWork(),
                 intention: sessionIntention,
                 completedPomodoros: 1,
                 type: 'work',
@@ -266,16 +277,16 @@ export const useFocusStore = create<FocusState>()(
             
             if (newCompleted >= POMODOROS_BEFORE_LONG_BREAK) {
               nextPhase = 'longBreak'
-              nextTime = POMODORO_LONG_BREAK
+              nextTime = getPomodoroLongBreak()
               newCompleted = 0
             } else {
               nextPhase = 'shortBreak'
-              nextTime = POMODORO_SHORT_BREAK
+              nextTime = getPomodoroShortBreak()
             }
           } else {
             // Break complete - back to work
             nextPhase = 'work'
-            nextTime = POMODORO_WORK
+            nextTime = getPomodoroWork()
           }
           
           set({
