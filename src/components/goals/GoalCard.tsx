@@ -74,7 +74,7 @@ const TASK_GROUPS: TaskGroupConfig[] = [
 
 export function GoalCard({ goal }: GoalCardProps) {
   const { deleteGoal } = useGoalStore()
-  const { getTasksByGoal } = useTaskStore()
+  const { getTasksSortedByPriority, getTasksSortedByDueDate } = useTaskStore()
   const { activeTaskId, stopPomodoro, startPomodoro } = useFocusStore()
   
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -92,7 +92,12 @@ export function GoalCard({ goal }: GoalCardProps) {
   const [focusIntention, setFocusIntention] = useState('')
   const [focusTaskId, setFocusTaskId] = useState<string | null>(null)
 
-  const goalTasks = getTasksByGoal(goal.id)
+  // Sort option state
+  const [sortBy, setSortBy] = useState<'priority' | 'dueDate'>('priority')
+
+  const sortedTasks = sortBy === 'priority' 
+    ? getTasksSortedByPriority(goal.id)
+    : getTasksSortedByDueDate(goal.id)
   const status = statusConfig[goal.status]
 
   // Helper function - must be defined before useMemo
@@ -103,22 +108,22 @@ export function GoalCard({ goal }: GoalCardProps) {
 
   // Group tasks
   const { inProgressTasks, remainingTasks, completedTasks } = useMemo(() => {
-    const inProgress = goalTasks.filter(t => !t.completed && hasActiveSubtasks(t))
-    const remaining = goalTasks.filter(t => !t.completed && !hasActiveSubtasks(t))
-    const completed = goalTasks.filter(t => t.completed)
+    const inProgress = sortedTasks.filter(t => !t.completed && hasActiveSubtasks(t))
+    const remaining = sortedTasks.filter(t => !t.completed && !hasActiveSubtasks(t))
+    const completed = sortedTasks.filter(t => t.completed)
     return { inProgressTasks: inProgress, remainingTasks: remaining, completedTasks: completed }
-  }, [goalTasks])
+  }, [sortedTasks])
 
   // Progress calculation
-  const totalItems = goalTasks.reduce((acc, task) => acc + 1 + (task.subtasks?.length || 0), 0)
-  const completedItems = goalTasks.reduce((acc, task) => {
+  const totalItems = sortedTasks.reduce((acc, task) => acc + 1 + (task.subtasks?.length || 0), 0)
+  const completedItems = sortedTasks.reduce((acc, task) => {
     const taskCompleted = task.completed ? 1 : 0
     const subtasksCompleted = task.subtasks?.filter(s => s.completed).length || 0
     return acc + taskCompleted + subtasksCompleted
   }, 0)
   const progress = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0
 
-  const completedTaskCount = goalTasks.filter(t => t.completed).length
+  const completedTaskCount = sortedTasks.filter(t => t.completed).length
 
   // Deadline helpers
   const getDeadlineStatus = () => {
@@ -161,7 +166,7 @@ export function GoalCard({ goal }: GoalCardProps) {
 
   // Focus on this goal - start pomodoro on first uncompleted task
   const handleFocusGoal = () => {
-    const firstUncompleted = goalTasks.find(t => !t.completed)
+    const firstUncompleted = sortedTasks.find(t => !t.completed)
     if (firstUncompleted) {
       if (activeTaskId) {
         stopPomodoro()
@@ -176,7 +181,7 @@ export function GoalCard({ goal }: GoalCardProps) {
   // Start Pomodoro with intention
   const handleStartFocusWithIntention = () => {
     if (focusTaskId) {
-      const task = goalTasks.find(t => t.id === focusTaskId)
+      const task = sortedTasks.find(t => t.id === focusTaskId)
       startPomodoro(focusTaskId, goal.id, task?.title || '', focusIntention)
       setShowFocusModal(false)
       setFocusIntention('')
@@ -396,7 +401,7 @@ export function GoalCard({ goal }: GoalCardProps) {
                 <div className="flex items-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
                   <ListTodo className="w-3.5 h-3.5" />
                   <span className="text-xs">
-                    {completedTaskCount} of {goalTasks.length} tasks done
+                    {completedTaskCount} of {sortedTasks.length} tasks done
                   </span>
                 </div>
 
@@ -417,10 +422,37 @@ export function GoalCard({ goal }: GoalCardProps) {
         </div>
 
         {/* Task List Section */}
-        {goalTasks.length > 0 && (
+        {sortedTasks.length > 0 && (
           <div className="px-5 pb-4">
+            {/* Sort Options */}
+            <div className="border-t pt-3 mb-3 flex items-center justify-between">
+              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Sort by:</span>
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  onClick={() => setSortBy('priority')}
+                  className={`text-xs px-2 py-1 rounded transition-colors ${
+                    sortBy === 'priority' ? 'bg-[#fbbf24]/20 text-[#fbbf24]' : ''
+                  }`}
+                  style={{ color: sortBy === 'priority' ? '#fbbf24' : 'var(--text-muted)' }}
+                >
+                  Priority
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSortBy('dueDate')}
+                  className={`text-xs px-2 py-1 rounded transition-colors ${
+                    sortBy === 'dueDate' ? 'bg-[#fbbf24]/20 text-[#fbbf24]' : ''
+                  }`}
+                  style={{ color: sortBy === 'dueDate' ? '#fbbf24' : 'var(--text-muted)' }}
+                >
+                  Due Date
+                </button>
+              </div>
+            </div>
+
             <div 
-              className="border-t pt-4"
+              className="border-t pt-1"
               style={{ borderColor: 'rgba(255,255,255,0.1)' }}
             >
               {/* In Progress Tasks */}
@@ -479,7 +511,7 @@ export function GoalCard({ goal }: GoalCardProps) {
           </Button>
 
           {/* Center: Focus on goal */}
-          {goalTasks.some(t => !t.completed) && (
+          {sortedTasks.some(t => !t.completed) && (
             <button
               onClick={handleFocusGoal}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
