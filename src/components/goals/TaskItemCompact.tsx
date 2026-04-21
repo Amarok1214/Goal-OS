@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, Plus, ChevronRight, ChevronDown, Pencil, Trash2 } from 'lucide-react'
+import { Check, Plus, ChevronRight, ChevronDown, Pencil, Trash2, Calendar } from 'lucide-react'
 import { useTaskStore } from '../../store/taskStore'
 import { useFocusStore } from '../../store/focusStore'
-import type { Task } from '../../types'
+import type { Task, TaskPriority } from '../../types'
+
+const PRIORITY_COLORS: Record<TaskPriority, string> = {
+  high: '#ef4444',
+  medium: '#fbbf24',
+  low: '#4ade80',
+}
 
 interface TaskItemCompactProps {
   task: Task
@@ -32,6 +38,21 @@ export function TaskItemCompact({ task, onEdit, goalId, isDimmed = false }: Task
   const subtasks = task.subtasks || []
   const completedSubtasks = subtasks.filter(s => s.completed).length
   const hasSubtasks = subtasks.length > 0
+
+  const formatDueDate = (date: Date | null): string => {
+    if (!date) return ''
+    const d = new Date(date)
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }
+
+  const isOverdue = (): boolean => {
+    if (!task.dueDate || task.completed) return false
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const due = new Date(task.dueDate)
+    due.setHours(0, 0, 0, 0)
+    return due < today
+  }
 
   const handleToggle = () => {
     toggleTask(task.id)
@@ -128,6 +149,32 @@ export function TaskItemCompact({ task, onEdit, goalId, isDimmed = false }: Task
           >
             {completedSubtasks}/{subtasks.length}
           </button>
+        )}
+
+        {/* Priority Badge - show for all incomplete tasks */}
+        {!task.completed && (
+          <span
+            className="text-xs px-1.5 py-0.5 rounded font-medium capitalize shrink-0"
+            style={{ 
+              background: `${PRIORITY_COLORS[task.priority || 'medium']}20`,
+              color: PRIORITY_COLORS[task.priority || 'medium'],
+            }}
+            title="Priority"
+          >
+            {task.priority || 'medium'}
+          </span>
+        )}
+
+        {/* Due Date */}
+        {!task.completed && task.dueDate && (
+          <span
+            className="text-xs flex items-center gap-1 shrink-0"
+            style={{ color: isOverdue() ? '#f87171' : 'var(--text-muted)' }}
+            title={isOverdue() ? 'Overdue' : 'Due date'}
+          >
+            <Calendar className="w-3 h-3" />
+            {formatDueDate(task.dueDate)}
+          </span>
         )}
 
         {/* + Subtask button (show on hover) - for ALL incomplete tasks */}

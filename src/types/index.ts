@@ -56,11 +56,14 @@ export type SubTask = {
   createdAt: Date
 }
 
+export type TaskPriority = 'high' | 'medium' | 'low'
+
 export interface Task {
   id: string
   goalId: string
   title: string
   dueDate: Date | null
+  priority: TaskPriority
   completed: boolean
   createdAt: Date
   updatedAt: Date
@@ -69,12 +72,14 @@ export interface Task {
 
 export interface TaskStore {
   tasks: Task[]
-  addTask: (goalId: string, title: string) => void
+  addTask: (goalId: string, title: string, priority?: TaskPriority) => void
   updateTask: (id: string, updates: Partial<Omit<Task, 'id' | 'goalId'>>) => void
   deleteTask: (id: string) => void
   toggleTask: (id: string) => void
   getTasksByGoal: (goalId: string) => Task[]
   getTodayTasks: () => Task[]
+  getTasksSortedByPriority: (goalId: string) => Task[]
+  getTasksSortedByDueDate: (goalId: string) => Task[]
   addSubtask: (taskId: string, title: string) => void
   toggleSubtask: (taskId: string, subtaskId: string) => void
   deleteSubtask: (taskId: string, subtaskId: string) => void

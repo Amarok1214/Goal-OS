@@ -4,7 +4,13 @@ import { Check, Pencil, Trash2, Calendar, Play, Pause, Plus, Trash2 as TrashSub 
 import { Button } from '../ui/button'
 import { useTaskStore } from '../../store/taskStore'
 import { useFocusStore } from '../../store/focusStore'
-import type { Task } from '../../types'
+import type { Task, TaskPriority } from '../../types'
+
+const PRIORITY_COLORS: Record<TaskPriority, string> = {
+  high: '#ef4444',
+  medium: '#fbbf24',
+  low: '#4ade80',
+}
 
 interface TaskItemProps {
   task: Task
@@ -145,6 +151,18 @@ export function TaskItem({ task, onEdit, dimmed = false, goalId }: TaskItemProps
             + Subtask
           </button>
         )}
+
+        {/* Priority Badge */}
+        <span
+          className="text-xs px-1.5 py-0.5 rounded font-medium capitalize"
+          style={{ 
+            background: `${PRIORITY_COLORS[task.priority || 'medium']}20`,
+            color: PRIORITY_COLORS[task.priority || 'medium'],
+          }}
+          title="Priority"
+        >
+          {task.priority || 'medium'}
+        </span>
 
         {/* Due Date */}
         {task.dueDate && (

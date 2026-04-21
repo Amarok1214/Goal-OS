@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -6,17 +6,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useTaskStore } from '../../store/taskStore'
-import type { Task } from '../../types'
+import type { Task, TaskPriority } from '../../types'
 
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title must be 100 characters or less'),
-  dueDate: z.string().optional().refine(
-    (val) => !val || !isNaN(Date.parse(val)),
-    { message: 'Invalid date format' }
-  ),
+  dueDate: z.string().optional(),
 })
 
 type TaskFormData = z.infer<typeof taskSchema>
+
+const PRIORITY_OPTIONS: { value: TaskPriority; label: string; color: string }[] = [
+  { value: 'high', label: 'High', color: '#ef4444' },
+  { value: 'medium', label: 'Medium', color: '#fbbf24' },
+  { value: 'low', label: 'Low', color: '#4ade80' },
+]
 
 interface TaskFormProps {
   open: boolean
@@ -27,6 +30,7 @@ interface TaskFormProps {
 
 export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps) {
   const { addTask, updateTask } = useTaskStore()
+  const [priority, setPriority] = useState<TaskPriority>('medium')
 
   const {
     register,
@@ -48,11 +52,13 @@ export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps
       if (editTask) {
         setValue('title', editTask.title)
         setValue('dueDate', editTask.dueDate ? new Date(editTask.dueDate).toISOString().split('T')[0] : '')
+        setPriority(editTask.priority || 'medium')
       } else {
         reset({
           title: '',
           dueDate: '',
         })
+        setPriority('medium')
       }
     }
   }, [open, editTask, setValue, reset])
@@ -62,10 +68,11 @@ export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps
       updateTask(editTask.id, {
         title: data.title,
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
+        priority: priority,
         completed: editTask.completed,
       })
     } else {
-      addTask(goalId, data.title)
+      addTask(goalId, data.title, priority)
     }
 
     onOpenChange(false)
@@ -115,6 +122,33 @@ export function TaskForm({ open, onOpenChange, goalId, editTask }: TaskFormProps
             {errors.dueDate && (
               <p className="text-sm mt-1" style={{ color: '#ef4444' }}>{errors.dueDate.message}</p>
             )}
+          </div>
+
+          {/* Priority Selector */}
+          <div>
+            <label className="text-sm font-medium mb-2 block" style={{ color: 'var(--text-secondary)' }}>
+              Priority
+            </label>
+            <div className="flex gap-2">
+              {PRIORITY_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setPriority(option.value)}
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
+                    priority === option.value ? 'ring-2 ring-offset-2 ring-offset-[var(--bg-surface)]' : ''
+                  }`}
+                  style={{
+                    background: priority === option.value ? `${option.color}30` : 'var(--surface-glass)',
+                    color: option.color,
+                    boxShadow: priority === option.value ? `0 0 0 2px ${option.color}` : 'none',
+                    border: `1px solid ${priority === option.value ? option.color : 'var(--border-default)'}`,
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
