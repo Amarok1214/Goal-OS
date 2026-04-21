@@ -148,7 +148,7 @@
 - [ ] 06-01-PLAN.md — Supabase Setup & Client
 - [ ] 06-02-PLAN.md — Migrate Stores to Supabase
 - [x] 06-03-PLAN.md — Export/Import & Settings (COMPLETE)
-- [ ] 06-05-PLAN.md — Global Search
+- [x] 06-05-PLAN.md — Global Search (COMPLETE)
 - [ ] 06-06-PLAN.md — Task Due Dates & Priority
 
 ---
@@ -162,7 +162,7 @@
 | 3. Reflection | 0/1 | Not started | - |
 | 4. Focus & Productivity | 1/1 | Complete | 2026-03-20 |
 | 5. Analytics & Planning | 2/2 | Complete | 2026-03-25 |
-| 6. Data & Backend | 1/5 | In progress | 2026-04-21 |
+| 6. Data & Backend | 2/5 | In progress | 2026-04-21 |
 
 ---
 
@@ -202,7 +202,7 @@
 | DATA-04 | Phase 6 | Complete |
 | UX-01 | Phase 6 | Complete |
 | UX-02 | Phase 6 | Pending |
-| UX-03 | Phase 6 | Pending |
+| UX-03 | Phase 6 | Complete |
 | TASK-01 | Phase 6 | Pending |
 | TASK-02 | Phase 6 | Pending |
 | TASK-03 | Phase 6 | Pending |
