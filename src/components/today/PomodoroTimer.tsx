@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   useFocusStore, 
-  POMODORO_WORK, 
-  POMODORO_SHORT_BREAK, 
-  POMODORO_LONG_BREAK,
+  getPomodoroWork, 
+  getPomodoroShortBreak, 
+  getPomodoroLongBreak,
   POMODOROS_BEFORE_LONG_BREAK,
   playChime 
 } from '../../store/focusStore'
@@ -180,9 +180,9 @@ export function PomodoroTimer() {
   }
   
   const colors = getPhaseColors()
-  const totalTime = pomodoroPhase === 'work' ? POMODORO_WORK 
-    : pomodoroPhase === 'shortBreak' ? POMODORO_SHORT_BREAK 
-    : POMODORO_LONG_BREAK
+const totalTime = pomodoroPhase === 'work' ? getPomodoroWork()
+    : pomodoroPhase === 'shortBreak' ? getPomodoroShortBreak()
+    : getPomodoroLongBreak()
   const progress = ((totalTime - pomodoroTimeLeft) / totalTime) * 100
   
   // No active task and not in standalone mode - show standalone Pomodoro option
@@ -209,7 +209,7 @@ export function PomodoroTimer() {
               Ready to Focus?
             </p>
             <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
-              Start a 25-minute Pomodoro session without linking to a task
+              Start a Pomodoro session without linking to a task
             </p>
           </div>
           
