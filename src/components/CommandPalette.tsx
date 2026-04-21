@@ -11,6 +11,7 @@ interface CommandPaletteProps {
   onNavigateToDashboard: () => void
   onNavigateToPlanner: () => void
   onOpenGoalForm: () => void
+  onOpenSearch: () => void
 }
 
 export function CommandPalette({ 
@@ -20,7 +21,8 @@ export function CommandPalette({
   onNavigateToToday,
   onNavigateToDashboard,
   onNavigateToPlanner,
-  onOpenGoalForm 
+  onOpenGoalForm,
+  onOpenSearch 
 }: CommandPaletteProps) {
   const { goals } = useGoalStore()
   const [searchValue, setSearchValue] = useState('')
@@ -150,6 +152,17 @@ export function CommandPalette({
           </Command.Group>
 
           <Command.Group heading="Actions" className="mb-2 [&>[cmdk-group-heading]]:text-xs [&>[cmdk-group-heading]]:font-semibold [&>[cmdk-group-heading]]:uppercase [&>[cmdk-group-heading]]:tracking-wider [&>[cmdk-group-heading]]:mb-2 [&>[cmdk-group-heading]]:px-2 [&>[cmdk-group-heading]]:text-[var(--text-muted)]">
+            <Command.Item
+              onSelect={() => {
+                onOpenSearch()
+                setOpen(false)
+              }}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer data-[selected=true]:bg-[var(--surface-glass-hover)]"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              <Search className="w-4 h-4" style={{ color: 'var(--text-accent)' }} />
+              <span>Search Goals & Tasks</span>
+            </Command.Item>
             <Command.Item
               onSelect={() => {
                 onOpenGoalForm()

@@ -5,6 +5,7 @@ import { Dashboard } from './components/dashboard/Dashboard'
 import { WeeklyPlanner } from './components/planner/WeeklyPlanner'
 import { Settings } from './components/settings'
 import { CommandPalette } from './components/CommandPalette'
+import { SearchModal } from './components/search/SearchModal'
 import { Sun, Target, Plus, Search, BarChart3, Calendar, Settings as SettingsIcon } from 'lucide-react'
 import { useGoalStore } from './store/goalStore'
 
@@ -12,6 +13,7 @@ function App() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [view, setView] = useState<'today' | 'all' | 'dashboard' | 'planner' | 'settings'>('today')
   const [isPaletteOpen, setIsPaletteOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
   const { goals } = useGoalStore()
 
   return (
@@ -161,6 +163,24 @@ function App() {
         onNavigateToPlanner={() => setView('planner')}
         onOpenGoalForm={() => {
           setIsFormOpen(true)
+        }}
+        onOpenSearch={() => {
+          setIsPaletteOpen(false)
+          setIsSearchOpen(true)
+        }}
+      />
+
+      {/* Global Search Modal */}
+      <SearchModal
+        open={isSearchOpen}
+        onOpenChange={setIsSearchOpen}
+        onNavigateToGoal={(_goalId) => {
+          setView('all')
+          // TODO: Scroll to goal or expand it
+        }}
+        onNavigateToTask={(_goalId, _taskId) => {
+          setView('all')
+          // TODO: Scroll to task or expand it
         }}
       />
     </div>
