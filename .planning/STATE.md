@@ -8,8 +8,8 @@ progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 10
-  completed_plans: 8
-  percent: 80
+  completed_plans: 9
+  percent: 90
 ---
 
 # STATE: Goal OS
@@ -20,9 +20,9 @@ progress:
 ## Current Position
 
 - **Phase:** 6 - Data & Backend
-- **Plan:** 06-05 complete
+- **Plan:** 06-06 complete
 - **Status:** In progress
-- **Progress:** [████████░] 80%
+- **Progress:** [█████████] 90%
 
 ## Completed Tasks
 
@@ -169,6 +169,7 @@ progress:
 - [x] 06-03-PLAN.md — Settings + Export/Import ✓
 - [x] 06-04-PLAN.md — Connect Settings to Pomodoro ✓
 - [x] 06-05-PLAN.md — Global Search ✓
+- [x] 06-06-PLAN.md — Task Due Dates & Priority ✓
 
 **Features implemented:**
 1. Settings page with preferences management ✓
@@ -178,12 +179,15 @@ progress:
 5. Pomodoro timer connected to settings ✓
 6. Global search modal with Ctrl+K shortcut ✓
 7. Search results grouped by Goals and Tasks ✓
+8. Task priority field (high/medium/low) with color coding ✓
+9. Task due date field with overdue indicator ✓
+10. Task sorting by priority and due date ✓
 
 ## Next Steps
 
-1. 06-05 complete - Global search modal with Ctrl+K shortcut
-2. Continue with 06-06 (Task Due Dates & Priority) or 06-01/02 (Supabase)
+1. 06-06 complete - Task Due Dates & Priority
+2. Continue with 06-01/02 (Supabase) or remaining Phase 6 plans
 
 ---
 
-*State updated: 2026-04-21 - Phase 6 plan 06-05 complete*
+*State updated: 2026-04-21 - Phase 6 plan 06-06 complete*
