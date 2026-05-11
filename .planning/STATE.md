@@ -88,12 +88,16 @@ progress:
 | Color-coded categories | Visual distinction and quick recognition | Locked |
 | Phase 05 P02 | 15 | 9 tasks | 8 files |
 
+### Pending Todos
+1. **Make project mobile-friendly with responsive components** — Area: ui — Added: 2026-05-11
+
 ### Phase Structure
 1. **Phase 1:** Foundation & Goals - Setup + Goal CRUD ✓
 2. **Phase 2:** Tasks & Progress - Task management + Today view ✓
 3. **Phase 3:** Reflection - Journaling + Weekly Review (Deferred)
 4. **Phase 4:** Focus & Productivity - Focus timer, Pomodoro, Categories ✓
-5. **Phase 5:** Analytics & Planning - Study Dashboard, Weekly Planner (Next)
+5. **Phase 5:** Analytics & Planning - Study Dashboard, Weekly Planner ✓
+6. **Phase 6:** Data & Backend - Settings, Export, Search, Priority (In progress)
 
 ### Research Input
 - Tech stack: React 19 + Vite 6 + TypeScript 5 + Zustand + shadcn/ui + Tailwind
