@@ -90,6 +90,7 @@ progress:
 
 ### Pending Todos
 1. **Make project mobile-friendly with responsive components** — Area: ui — Added: 2026-05-11
+2. **Fix GoalCard overflow and ensure Planner visibility** — Area: ui — Added: 2026-05-11
 
 ### Phase Structure
 1. **Phase 1:** Foundation & Goals - Setup + Goal CRUD ✓
